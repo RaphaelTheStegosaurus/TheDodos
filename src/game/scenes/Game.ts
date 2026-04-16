@@ -6,6 +6,10 @@ import { CrateGenerator } from "../../entities/CrateGenerator";
 export class Game extends Phaser.Scene {
   private player!: Player;
   private crates!: Phaser.Physics.Arcade.StaticGroup;
+  private buildText!: Phaser.GameObjects.Text;
+  private partsCollected: number = 0;
+  private uiText!: Phaser.GameObjects.Text;
+
   constructor() {
     super("Game");
   }
@@ -40,6 +44,7 @@ export class Game extends Phaser.Scene {
     const generator = new CrateGenerator(this, this.crates);
     generator.startSpawning();
     this.physics.add.collider(this.player, this.crates);
+    this.createUI();
     this.events.on("player_attack", (data: { x: number; y: number }) => {
       this.handleAttack(data.x, data.y);
     });
@@ -73,7 +78,7 @@ export class Game extends Phaser.Scene {
     this.time.delayedCall(100, () => hitArea.destroy());
   }
   private spawnLoot(x: number, y: number, type: string) {
-    const item = this.physics.add.sprite(x, y, "logo", 10);
+    const item = this.physics.add.sprite(x, y, "tiles", 10);
     if (type === "REPAIR_KIT") {
       item.setTint(0x00ff00);
     } else if (type === "EXPLOSIVE") {
@@ -81,7 +86,42 @@ export class Game extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, item, () => {
       console.log(`Recogiste: ${type}`);
+      if (type === "REPAIR_KIT") {
+        this.partsCollected += 1;
+        this.updateUI();
+        this.updateBuildProgress();
+      }
       item.destroy();
     });
+  }
+  private createUI() {
+    this.uiText = this.add
+      .text(20, 20, "Piezas de Tanque: 0", {
+        fontSize: "24px",
+        color: "#ffffff",
+        backgroundColor: "#000000",
+        padding: { x: 10, y: 5 },
+      })
+      .setScrollFactor(0)
+      .setDepth(1000);
+    this.buildText = this.add
+      .text(20, 60, "Progreso Meca: 0%", {
+        fontSize: "24px",
+        color: "#ffff00",
+        stroke: "#000000",
+        strokeThickness: 3,
+      })
+      .setScrollFactor(0)
+      .setDepth(1000);
+  }
+  private updateUI() {
+    this.uiText.setText(`Piezas de Tanque: ${this.partsCollected}`);
+  }
+  private updateBuildProgress() {
+    const progress = Math.min(this.partsCollected * 20, 100);
+    this.buildText.setText(`Progreso Meca: ${progress}%`);
+    if (this.partsCollected === 5) {
+      this.player.upgradeToChassis();
+    }
   }
 }

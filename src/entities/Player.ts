@@ -3,6 +3,7 @@ import * as Phaser from "phaser";
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public zHeight: number = 0;
+  private currentPhase: number = 0;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player-sprite");
     scene.add.existing(this);
@@ -36,10 +37,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
   attack() {
-    console.log("¡Atacando! Posición:", this.x, this.y);
     this.scene.events.emit("player_attack", {
       x: this.x + (this.flipX ? -20 : 20),
       y: this.y,
     });
+  }
+  public upgradeToChassis() {
+    this.currentPhase = 1;
+    this.setScale(1.2);
+    this.setTint(0x999999);
+    console.log("¡Dodo ha evolucionado a Fase: CHASIS!");
   }
 }

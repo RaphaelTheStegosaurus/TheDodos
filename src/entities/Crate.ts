@@ -3,7 +3,6 @@ import * as Phaser from "phaser";
 export class Crate extends Phaser.Physics.Arcade.Sprite {
   public health: number = 3;
   protected lootType: string = "generic";
-
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -14,11 +13,9 @@ export class Crate extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture, frame);
     scene.add.existing(this);
     scene.physics.add.existing(this, true);
-
     this.setFrame(1);
     this.body?.setSize(32, 32);
   }
-
   public takeDamage(amount: number) {
     this.health -= amount;
     this.setTint(0xff0000);
@@ -27,9 +24,7 @@ export class Crate extends Phaser.Physics.Arcade.Sprite {
       this.onBreak();
     }
   }
-
   protected onBreak() {
-    // Emitimos un evento general de "caja rota" y pasamos el tipo de loot
     this.scene.events.emit("crate_broken", {
       x: this.x,
       y: this.y,
