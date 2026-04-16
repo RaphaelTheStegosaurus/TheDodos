@@ -1,16 +1,18 @@
-import { Scene, Physics } from "phaser";
+import * as Phaser from "phaser";
 
-export class Player extends Physics.Arcade.Sprite {
+export class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public zHeight: number = 0;
-  constructor(scene: Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player-sprite");
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
-
-    // this.setBounce(0.2);
-    this.cursors = scene.input.keyboard!.createCursorKeys();
+    if (scene.input && scene.input.keyboard) {
+      this.cursors = scene.input.keyboard.createCursorKeys();
+    } else {
+      throw new Error("Keyboard input not available");
+    }
   }
 
   update() {
@@ -29,5 +31,15 @@ export class Player extends Physics.Arcade.Sprite {
     if (this.body) {
       this.body.velocity.normalize().scale(speed);
     }
+    if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
+      this.attack();
+    }
+  }
+  attack() {
+    console.log("¡Atacando!");
+    this.scene.events.emit("player_attack", {
+      x: this.x + (this.flipX ? -20 : 20),
+      y: this.y,
+    });
   }
 }
