@@ -4,6 +4,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public zHeight: number = 0;
   private currentPhase: number = 0;
+  public hp: number = 100;
+  public maxHp: number = 100;
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player-sprite");
     scene.add.existing(this);
@@ -47,5 +50,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setScale(1.2);
     this.setTint(0x999999);
     console.log("¡Dodo ha evolucionado a Fase: CHASIS!");
+  }
+  public takeDamage(amount: number) {
+    this.hp -= amount;
+    if (this.hp < 0) this.hp = 0;
+    this.setTint(0xff0000);
+    this.scene.time.delayedCall(100, () => this.clearTint());
+    this.scene.events.emit("player_hp_changed", this.hp);
+
+    if (this.hp <= 0) {
+      this.die();
+    }
+  }
+
+  private die() {
+    console.log("El jugador ha sido destruido");
+    //todo mostrar GameOver
   }
 }
