@@ -63,11 +63,13 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, width, height);
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
   }
+
   public checkAttack(hitArea: Phaser.GameObjects.Zone) {
     this.physics.add.overlap(hitArea, this.crates, (_zone, crate) => {
       (crate as any).takeDamage(1);
     });
   }
+
   private handleAttack(x: number, y: number) {
     const hitArea = this.add.zone(x, y, 32, 32);
     this.physics.add.existing(hitArea);
@@ -75,9 +77,12 @@ export class Game extends Phaser.Scene {
     this.physics.overlap(hitArea, this.crates, (_zone, crate) => {
       (crate as Crate).takeDamage(1);
     });
-
+    // this.physics.overlap(hitArea, this.enemies, (_zone, enemy) => {
+    //   (enemy as Player).takeDamage(10);
+    // });
     this.time.delayedCall(100, () => hitArea.destroy());
   }
+
   private spawnLoot(x: number, y: number, type: string) {
     const item = this.physics.add.sprite(x, y, "tiles", 10);
     if (type === "REPAIR_KIT") {
@@ -95,6 +100,7 @@ export class Game extends Phaser.Scene {
       item.destroy();
     });
   }
+
   private createUI() {
     this.uiText = this.add
       .text(20, 20, "Piezas de Tanque: 0", {
@@ -125,9 +131,11 @@ export class Game extends Phaser.Scene {
       this.updateHealthBar(hp);
     });
   }
+
   private updateUI() {
     this.uiText.setText(`Piezas de Tanque: ${this.partsCollected}`);
   }
+
   private updateBuildProgress() {
     const progress = Math.min(this.partsCollected * 20, 100);
     this.buildText.setText(`Progreso Meca: ${progress}%`);
