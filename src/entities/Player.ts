@@ -7,7 +7,8 @@ export class Player extends Physics.Arcade.Sprite {
     super(scene, x, y, "player-sprite");
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    // this.setCollideWorldBounds(true);
+    this.setCollideWorldBounds(true);
+
     // this.setBounce(0.2);
     this.cursors = scene.input.keyboard!.createCursorKeys();
   }

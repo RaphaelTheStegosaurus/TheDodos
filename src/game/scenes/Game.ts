@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { Player } from "../../entities/player";
+import { Player } from "../../entities/Player";
 
 export class Game extends Scene {
   private player!: Player;
@@ -9,30 +9,35 @@ export class Game extends Scene {
 
   preload() {
     this.load.setPath("assets");
-    this.load.image("background", "bg.png");
-    this.load.image("logo", "logo.png");
+    this.load.image("tiles", "world-tileset.png");
+    this.load.tilemapTiledJSON("map", "large-map.json");
     this.load.image("player-sprite", "character.png");
   }
 
   create() {
-    this.add.image(512, 384, "background");
+    const mapWidth = 100 * 32;
+    const mapHeight = 100 * 32;
+    const map = this.make.tilemap({ key: "map" });
+
+    const tileset = map.addTilesetImage("TopDownWorld", "tiles");
+
+    const groundLayer = map.createLayer("Ground", tileset!, 0, 0);
+    const wallLayer = map.createLayer("Walls", tileset!, 0, 0);
+
+    wallLayer?.setCollisionByProperty({ collides: true });
+
+    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
     this.player = new Player(this, 400, 300);
-    this.add.image(512, 350, "logo").setDepth(100);
-    this.add
-      .text(512, 490, "THE DODOS", {
-        fontFamily: "Arial Black",
-        fontSize: 38,
-        color: "#ffffff",
-        stroke: "#000000",
-        strokeThickness: 8,
-        align: "center",
-      })
-      .setOrigin(0.5)
-      .setDepth(100);
+    this.setupCamera(mapWidth, mapHeight);
   }
   update() {
     if (this.player) {
       this.player.update();
     }
+  }
+  private setupCamera(width: number, height: number) {
+    this.cameras.main.setBounds(0, 0, width, height);
+    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
   }
 }
