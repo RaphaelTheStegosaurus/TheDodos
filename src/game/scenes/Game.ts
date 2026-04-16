@@ -9,6 +9,7 @@ export class Game extends Phaser.Scene {
   private buildText!: Phaser.GameObjects.Text;
   private partsCollected: number = 0;
   private uiText!: Phaser.GameObjects.Text;
+  private healthBar!: Phaser.GameObjects.Graphics;
 
   constructor() {
     super("Game");
@@ -113,6 +114,16 @@ export class Game extends Phaser.Scene {
       })
       .setScrollFactor(0)
       .setDepth(1000);
+    const backgroundBar = this.add.graphics();
+    backgroundBar.fillStyle(0x000000, 0.5);
+    backgroundBar.fillRect(20, 100, 200, 20);
+    backgroundBar.setScrollFactor(0).setDepth(1000);
+    this.healthBar = this.add.graphics();
+    this.updateHealthBar(100);
+    this.healthBar.setScrollFactor(0).setDepth(1001);
+    this.events.on("player_hp_changed", (hp: number) => {
+      this.updateHealthBar(hp);
+    });
   }
   private updateUI() {
     this.uiText.setText(`Piezas de Tanque: ${this.partsCollected}`);
@@ -123,5 +134,17 @@ export class Game extends Phaser.Scene {
     if (this.partsCollected === 5) {
       this.player.upgradeToChassis();
     }
+  }
+  private updateHealthBar(hp: number) {
+    this.healthBar.clear();
+
+    // Cambiar color según la salud
+    if (hp > 50) this.healthBar.fillStyle(0x00ff00);
+    else if (hp > 25) this.healthBar.fillStyle(0xffff00);
+    else this.healthBar.fillStyle(0xff0000);
+
+    // Dibujar el rectángulo proporcional a la vida
+    const width = (hp / 100) * 200;
+    this.healthBar.fillRect(20, 100, width, 20);
   }
 }
