@@ -2,29 +2,39 @@ import * as Phaser from "phaser";
 
 export class Crate extends Phaser.Physics.Arcade.Sprite {
   public health: number = 3;
+  protected lootType: string = "generic";
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, "logo", 1);
-
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    texture: string,
+    frame: number
+  ) {
+    super(scene, x, y, texture, frame);
     scene.add.existing(this);
     scene.physics.add.existing(this, true);
 
     this.setFrame(1);
-    this.body?.setSize(28, 28);
+    this.body?.setSize(32, 32);
   }
 
   public takeDamage(amount: number) {
     this.health -= amount;
     this.setTint(0xff0000);
     this.scene.time.delayedCall(100, () => this.clearTint());
-
     if (this.health <= 0) {
-      this.destroy();
+      this.onBreak();
     }
   }
 
-  private break() {
-    //todo  Soltar un item o simplemente desaparecer
+  protected onBreak() {
+    // Emitimos un evento general de "caja rota" y pasamos el tipo de loot
+    this.scene.events.emit("crate_broken", {
+      x: this.x,
+      y: this.y,
+      type: this.lootType,
+    });
     this.destroy();
   }
 }

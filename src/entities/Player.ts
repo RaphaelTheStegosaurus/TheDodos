@@ -36,7 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
   attack() {
-    console.log("¡Atacando!");
+    console.log("¡Atacando! Posición:", this.x, this.y);
     this.scene.events.emit("player_attack", {
       x: this.x + (this.flipX ? -20 : 20),
       y: this.y,

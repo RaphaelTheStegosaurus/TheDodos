@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import { Player } from "../../entities/Player";
 import { Crate } from "../../entities/Crate";
+import { CrateGenerator } from "../../entities/CrateGenerator";
 
 export class Game extends Phaser.Scene {
   private player!: Player;
@@ -35,14 +36,19 @@ export class Game extends Phaser.Scene {
     if (this.player) {
       this.setupCamera(map.widthInPixels, map.heightInPixels);
     }
-
     this.crates = this.physics.add.staticGroup();
-    const crate1 = new Crate(this, 600, 400);
-    this.crates.add(crate1);
+    const generator = new CrateGenerator(this, this.crates);
+    generator.startSpawning();
     this.physics.add.collider(this.player, this.crates);
     this.events.on("player_attack", (data: { x: number; y: number }) => {
       this.handleAttack(data.x, data.y);
     });
+    this.events.on(
+      "crate_broken",
+      (data: { x: number; y: number; type: string }) => {
+        this.spawnLoot(data.x, data.y, data.type);
+      }
+    );
   }
   update() {
     if (this.player) this.player.update();
@@ -65,5 +71,17 @@ export class Game extends Phaser.Scene {
     });
 
     this.time.delayedCall(100, () => hitArea.destroy());
+  }
+  private spawnLoot(x: number, y: number, type: string) {
+    const item = this.physics.add.sprite(x, y, "logo", 10);
+    if (type === "REPAIR_KIT") {
+      item.setTint(0x00ff00);
+    } else if (type === "EXPLOSIVE") {
+    }
+
+    this.physics.add.overlap(this.player, item, () => {
+      console.log(`Recogiste: ${type}`);
+      item.destroy();
+    });
   }
 }
