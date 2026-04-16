@@ -1,3 +1,4 @@
+import * as Phaser from "phaser";
 import { Crate } from "./Crate";
 
 export class ExplosiveCrate extends Crate {
@@ -7,8 +8,17 @@ export class ExplosiveCrate extends Crate {
   }
 
   protected onBreak() {
-    // Todo Dañar al jugador si está cerca al romperse
-    console.log("¡BOOM! Daño de área");
+    const player = (this.scene as any).player;
+    const distance = Phaser.Math.Distance.Between(
+      this.x,
+      this.y,
+      player.x,
+      player.y
+    );
+
+    if (distance < 100) {
+      player.takeDamage(20);
+    }
     super.onBreak();
   }
 }
