@@ -1,4 +1,3 @@
-// src/managers/UIManager.ts
 import * as Phaser from "phaser";
 
 export class UIManager {
