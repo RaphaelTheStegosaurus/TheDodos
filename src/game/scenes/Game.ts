@@ -4,14 +4,15 @@ import { Crate } from "../../entities/Crate";
 import { CrateGenerator } from "../../entities/CrateGenerator";
 import { UIManager } from "../../managers/UIManager";
 import { EffectManager } from "../../effects/EffectManager";
+import { MapManager } from "../../managers/MapManager";
 
 export class Game extends Phaser.Scene {
   private ui!: UIManager;
   private effects!: EffectManager;
   private partsCollected: number = 0;
-
   private player!: Player;
   private crates!: Phaser.Physics.Arcade.StaticGroup;
+  private mapManager!: MapManager;
 
   constructor() {
     super("Game");
@@ -27,24 +28,11 @@ export class Game extends Phaser.Scene {
   }
 
   create() {
-    const TILES_X = 100;
-    const TILES_Y = 100;
-    const TILE_SIZE = 32;
-    const map = this.make.tilemap({
-      tileWidth: TILE_SIZE,
-      tileHeight: TILE_SIZE,
-      width: TILES_X,
-      height: TILES_Y,
-    });
-
-    const tileset = map.addTilesetImage("tileset_demo", "tiles");
-    const layer = map.createBlankLayer("Capa1", tileset!);
-    layer?.randomize(0, 0, TILES_X, TILES_Y, [0]);
-    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.mapManager = new MapManager(this);
 
     this.player = new Player(this, 400, 300);
     if (this.player) {
-      this.setupCamera(map.widthInPixels, map.heightInPixels);
+      this.setupCamera(this.mapManager.width, this.mapManager.height);
     }
 
     this.crates = this.physics.add.staticGroup();
