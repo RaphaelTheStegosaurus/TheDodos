@@ -57,10 +57,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setTint(0xff0000);
     this.scene.time.delayedCall(100, () => this.clearTint());
     this.scene.events.emit("player_hp_changed", this.hp);
-
-    if (this.hp <= 0) {
-      this.die();
-    }
+    this.scene.events.emit("player_hit");
+    if (this.hp <= 0) this.die();
   }
 
   private die() {

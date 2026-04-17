@@ -55,9 +55,18 @@ export class Game extends Phaser.Scene {
         this.spawnLoot(data.x, data.y, data.type);
       }
     );
+    this.events.on("player_hit", () => {
+      this.cameras.main.shake(50);
+    });
   }
   update() {
     if (this.player) this.player.update();
+  }
+  private updateCameraZoom() {
+    let newZoom = 1.5 - this.partsCollected * 0.1;
+    newZoom = Phaser.Math.Clamp(newZoom, 0.8, 1.5);
+    this.cameras.main.zoomTo(newZoom, 1000, "Linear", true);
+    // console.log(this.cameras.main);
   }
   private setupCamera(width: number, height: number) {
     this.cameras.main.setBounds(0, 0, width, height);
@@ -102,34 +111,33 @@ export class Game extends Phaser.Scene {
   }
 
   private createUI() {
-    this.uiText = this.add
-      .text(20, 20, "Piezas de Tanque: 0", {
-        fontSize: "24px",
-        color: "#ffffff",
-        backgroundColor: "#000000",
-        padding: { x: 10, y: 5 },
-      })
-      .setScrollFactor(0)
-      .setDepth(1000);
-    this.buildText = this.add
-      .text(20, 60, "Progreso Meca: 0%", {
-        fontSize: "24px",
-        color: "#ffff00",
-        stroke: "#000000",
-        strokeThickness: 3,
-      })
-      .setScrollFactor(0)
-      .setDepth(1000);
+    this.uiText = this.add.text(20, 20, "Piezas de Tanque: 0", {
+      fontSize: "24px",
+      color: "#ffffff",
+      backgroundColor: "#000000",
+      padding: { x: 10, y: 5 },
+    });
+    this.buildText = this.add.text(20, 60, "Progreso Meca: 0%", {
+      fontSize: "24px",
+      color: "#ffff00",
+      stroke: "#000000",
+      strokeThickness: 3,
+    });
     const backgroundBar = this.add.graphics();
     backgroundBar.fillStyle(0x000000, 0.5);
     backgroundBar.fillRect(20, 100, 200, 20);
-    backgroundBar.setScrollFactor(0).setDepth(1000);
     this.healthBar = this.add.graphics();
     this.updateHealthBar(100);
     this.healthBar.setScrollFactor(0).setDepth(1001);
     this.events.on("player_hp_changed", (hp: number) => {
       this.updateHealthBar(hp);
     });
+    this.uiText.setScrollFactor(0);
+    backgroundBar.setScrollFactor(0);
+    this.buildText.setScrollFactor(0);
+    backgroundBar.setDepth(1000);
+    this.uiText.setDepth(10000);
+    this.buildText.setDepth(10000);
   }
 
   private updateUI() {
@@ -139,19 +147,16 @@ export class Game extends Phaser.Scene {
   private updateBuildProgress() {
     const progress = Math.min(this.partsCollected * 20, 100);
     this.buildText.setText(`Progreso Meca: ${progress}%`);
+    this.updateCameraZoom();
     if (this.partsCollected === 5) {
       this.player.upgradeToChassis();
     }
   }
   private updateHealthBar(hp: number) {
     this.healthBar.clear();
-
-    // Cambiar color según la salud
     if (hp > 50) this.healthBar.fillStyle(0x00ff00);
     else if (hp > 25) this.healthBar.fillStyle(0xffff00);
     else this.healthBar.fillStyle(0xff0000);
-
-    // Dibujar el rectángulo proporcional a la vida
     const width = (hp / 100) * 200;
     this.healthBar.fillRect(20, 100, width, 20);
   }
