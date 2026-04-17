@@ -19,7 +19,7 @@ export class EffectManager {
     this.scene.time.delayedCall(500, () => particles.destroy());
   }
 
-  public screenShake(intensity: number = 0.02) {
-    this.scene.cameras.main.shake(intensity, 200);
+  public screenShake() {
+    this.scene.cameras.main.shake(200);
   }
 }
