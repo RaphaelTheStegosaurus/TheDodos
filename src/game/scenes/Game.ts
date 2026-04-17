@@ -99,11 +99,11 @@ export class Game extends Phaser.Scene {
   }
 
   private spawnLoot(x: number, y: number, type: string) {
-    const color = type === "REPAIR_KIT" ? 0x00ff00 : 0xffa500;
+    const color = type === "REPAIR_KIT" ? 0x00ff00 : 0xff0000;
     const count = type === "REPAIR_KIT" ? 15 : 40;
+    const boxSprite = type === "REPAIR_KIT" ? "green-box" : "red-box";
     this.effects.createExplosion(x, y, color, count);
-
-    const item = this.physics.add.sprite(x, y, "tiles", 10);
+    const item = this.physics.add.sprite(x, y, boxSprite, 10);
 
     this.physics.add.overlap(this.player, item, () => {
       if (type === "REPAIR_KIT") {
