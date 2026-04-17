@@ -18,6 +18,8 @@ export class Game extends Phaser.Scene {
   preload() {
     this.load.setPath("assets");
     this.load.image("tiles", "demo-ground.jpg");
+    this.load.image("red-box", "led-square-red.svg");
+    this.load.image("green-box", "led-square-green.svg");
     this.load.tilemapTiledJSON("map", "map.json");
     this.load.image("player-sprite", "character.png");
   }
@@ -95,8 +97,13 @@ export class Game extends Phaser.Scene {
   private spawnLoot(x: number, y: number, type: string) {
     const item = this.physics.add.sprite(x, y, "tiles", 10);
     if (type === "REPAIR_KIT") {
-      item.setTint(0x00ff00);
+      // item.setTint(0x00ff00);
+      item.setTexture("green-box");
+      this.createExplosionEffect(x, y, 0x00ff00, 15);
     } else if (type === "EXPLOSIVE") {
+      // item.setTint(0xff0000);
+      item.setTexture("red-box");
+      this.createExplosionEffect(x, y, 0xffa500, 40);
     }
 
     this.physics.add.overlap(this.player, item, () => {
@@ -149,6 +156,8 @@ export class Game extends Phaser.Scene {
     this.buildText.setText(`Progreso Meca: ${progress}%`);
     this.updateCameraZoom();
     if (this.partsCollected === 5) {
+      console.log("has conseguido las 5 piezas");
+
       this.player.upgradeToChassis();
     }
   }
@@ -159,5 +168,24 @@ export class Game extends Phaser.Scene {
     else this.healthBar.fillStyle(0xff0000);
     const width = (hp / 100) * 200;
     this.healthBar.fillRect(20, 100, width, 20);
+  }
+  private createExplosionEffect(
+    x: number,
+    y: number,
+    color: number,
+    count: number
+  ) {
+    const particles = this.add.particles(x, y, "tiles", {
+      frame: 10,
+      speed: { min: -100, max: 100 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 1, end: 0 },
+      blendMode: "SCREEN",
+      lifespan: 400,
+      gravityY: 200,
+      tint: color,
+    });
+    particles.explode(count);
+    this.time.delayedCall(500, () => particles.destroy());
   }
 }
