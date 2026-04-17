@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  private smokeEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   public zHeight: number = 0;
   private currentPhase: number = 0;
   public hp: number = 100;
@@ -17,6 +18,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     } else {
       throw new Error("Keyboard input not available");
     }
+
+    const particles = scene.add.particles(0, 0, "tiles", {
+      frame: 10,
+      scale: { start: 0.5, end: 0 },
+      alpha: { start: 0.5, end: 0 },
+      speed: 20,
+      lifespan: 600,
+      blendMode: "ADD",
+      frequency: -1,
+      follow: this,
+    });
+    this.smokeEmitter = particles;
   }
 
   update() {
@@ -58,6 +71,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.time.delayedCall(100, () => this.clearTint());
     this.scene.events.emit("player_hp_changed", this.hp);
     this.scene.events.emit("player_hit");
+    if (this.hp < 30) {
+      this.smokeEmitter.setFrequency(100);
+      this.smokeEmitter.setParticleTint(0x333333);
+    }
     if (this.hp <= 0) this.die();
   }
 
