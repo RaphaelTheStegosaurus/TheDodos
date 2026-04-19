@@ -2,24 +2,44 @@ import * as Phaser from "phaser";
 
 export class MapManager {
   private map: Phaser.Tilemaps.Tilemap;
-  private layer: Phaser.Tilemaps.TilemapLayer;
+  // private layer: Phaser.Tilemaps.TilemapLayer;
+  public groundLayer!: Phaser.Tilemaps.TilemapLayer;
+  public highLayer!: Phaser.Tilemaps.TilemapLayer;
+  public roofLayer!: Phaser.Tilemaps.TilemapLayer;
 
   constructor(scene: Phaser.Scene) {
-    const TILES_X = 100;
-    const TILES_Y = 100;
-    const TILE_SIZE = 32;
+    // const TILES_X = 100;
+    // const TILES_Y = 100;
+    // const TILE_SIZE = 32;
 
-    this.map = scene.make.tilemap({
-      tileWidth: TILE_SIZE,
-      tileHeight: TILE_SIZE,
-      width: TILES_X,
-      height: TILES_Y,
-    });
-
+    this.map = scene.make.tilemap({ key: "map" });
     const tileset = this.map.addTilesetImage("tileset_demo", "tiles");
 
-    this.layer = this.map.createBlankLayer("Capa1", tileset!)!;
-    this.layer.randomize(0, 0, TILES_X, TILES_Y, [0]);
+    // Añadimos "as Phaser.Tilemaps.TilemapLayer" al final de cada creación
+    this.groundLayer = this.map.createLayer(
+      "GroundWalls",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    this.groundLayer.setCollisionByProperty({ collides: true });
+
+    this.highLayer = this.map.createLayer(
+      "HighWalls",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    this.highLayer.setCollisionByProperty({ collides: true });
+    this.highLayer.setDepth(5);
+
+    this.roofLayer = this.map.createLayer(
+      "Roofs",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    this.roofLayer.setDepth(100);
 
     scene.physics.world.setBounds(
       0,

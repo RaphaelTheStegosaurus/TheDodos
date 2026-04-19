@@ -5,6 +5,7 @@ import { CrateGenerator } from "../../entities/CrateGenerator";
 import { UIManager } from "../../managers/UIManager";
 import { EffectManager } from "../../effects/EffectManager";
 import { MapManager } from "../../managers/MapManager";
+import { Stairs } from "../../entities/Stairs";
 
 export class Game extends Phaser.Scene {
   private ui!: UIManager;
@@ -20,7 +21,7 @@ export class Game extends Phaser.Scene {
 
   preload() {
     this.load.setPath("assets");
-    this.load.image("tiles", "demo-ground.jpg");
+    this.load.image("tiles", "tileset_demo.png");
     this.load.image("red-box", "led-square-red.svg");
     this.load.image("green-box", "led-square-green.svg");
     this.load.tilemapTiledJSON("map", "map.json");
@@ -43,9 +44,38 @@ export class Game extends Phaser.Scene {
     this.ui = new UIManager(this);
     this.effects = new EffectManager(this);
     this.setupEventListeners();
+
+    // Nota: Usamos mapManager.groundLayer (el nombre correcto definido en el Manager)
+    this.physics.add.collider(
+      this.player,
+      this.mapManager.groundLayer,
+      undefined,
+      () => {
+        // Solo colisiona si el jugador está en el nivel 0 (suelo)
+        return this.player.currentLevel === 0;
+      }
+    );
+
+    this.physics.add.collider(
+      this.player,
+      this.mapManager.highLayer,
+      undefined,
+      () => {
+        // Solo colisiona si el jugador está en el nivel 1 (planta alta)
+        return this.player.currentLevel === 1;
+      }
+    );
+    // Escaleras (Trigger)
+    const stairs = new Stairs(this, 600, 400, 64, 32);
+    this.physics.add.overlap(this.player, stairs, () => {
+      stairs.handleOverlap(this.player);
+    });
   }
   update() {
-    if (this.player) this.player.update();
+    if (this.player) {
+      this.player.update();
+      this.handleRoofTransparency();
+    }
   }
   private setupEventListeners() {
     this.events.on("player_attack", (data: { x: number; y: number }) => {
@@ -117,5 +147,30 @@ export class Game extends Phaser.Scene {
     this.physics.add.overlap(hitArea, this.crates, (_zone, crate) => {
       (crate as any).takeDamage(1);
     });
+  }
+
+  private handleRoofTransparency() {
+    // Obtenemos el tile exacto donde está el centro del jugador
+    const tile = this.mapManager.roofLayer.getTileAtWorldXY(
+      this.player.x,
+      this.player.y
+    );
+
+    // Si hay un tile de techo sobre el jugador
+    if (tile) {
+      // Suavizamos la transición a 0.3 de opacidad (30%)
+      this.mapManager.roofLayer.alpha = Phaser.Math.Linear(
+        this.mapManager.roofLayer.alpha,
+        0.3,
+        0.1
+      );
+    } else {
+      // Restauramos a opacidad total (100%)
+      this.mapManager.roofLayer.alpha = Phaser.Math.Linear(
+        this.mapManager.roofLayer.alpha,
+        1,
+        0.1
+      );
+    }
   }
 }
