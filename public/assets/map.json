@@ -1,11 +1,17 @@
 {
-  "width": 100,
+  "compressionlevel": -1,
   "height": 100,
-  "tilewidth": 32,
+  "width": 100,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
   "tileheight": 32,
+  "tilewidth": 32,
+  "type": "map",
+  "version": "1.10",
   "layers": [
     {
-      "name": "Suelo",
+      "name": "GroundWalls",
       "type": "tilelayer",
       "x": 0,
       "y": 0,
@@ -13,19 +19,40 @@
       "height": 100,
       "opacity": 1,
       "visible": true,
-      "data": [1, 1, 1, 1, 1, 1]
+      "data": [0, 0, 0, 0]
+    },
+    {
+      "name": "HighWalls",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 100,
+      "height": 100,
+      "opacity": 1,
+      "visible": true,
+      "data": [0, 0, 0, 0]
+    },
+    {
+      "name": "Roofs",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 100,
+      "height": 100,
+      "opacity": 1,
+      "visible": true,
+      "data": [0, 0, 0, 0]
     }
   ],
   "tilesets": [
     {
-      "name": "prototipo",
+      "name": "tileset_demo",
       "firstgid": 1,
       "tilewidth": 32,
       "tileheight": 32,
-      "columns": 3,
-      "image": "demo-ground.png",
-      "imagewidth": 60,
-      "imageheight": 60
+      "image": "tileset_demo.png",
+      "imagewidth": 64,
+      "imageheight": 64
     }
   ]
 }
