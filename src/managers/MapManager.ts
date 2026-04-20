@@ -8,24 +8,26 @@ export class MapManager {
 
   constructor(scene: Phaser.Scene) {
     this.map = scene.make.tilemap({ key: "map" });
-    const tileset = this.map.addTilesetImage("tileset_demo", "tiles");
-    const ground = this.map.createLayer("GroundWalls", tileset!, 0, 0);
-    if (ground) {
-      this.groundLayer = ground as Phaser.Tilemaps.TilemapLayer;
-      this.groundLayer.setCollisionByProperty({ collides: true });
-    }
-    const high = this.map.createLayer("HighWalls", tileset!, 0, 0);
-    if (high) {
-      this.highLayer = high as Phaser.Tilemaps.TilemapLayer;
-      this.highLayer.setCollisionByProperty({ collides: true });
-      this.highLayer.setDepth(5);
-    }
+    const tileset = this.map.addTilesetImage("scenario", "tiles");
 
-    const roof = this.map.createLayer("Roofs", tileset!, 0, 0);
-    if (roof) {
-      this.roofLayer = roof as Phaser.Tilemaps.TilemapLayer;
-      this.roofLayer.setDepth(100);
-    }
+    this.groundLayer = this.map.createLayer(
+      "GroundWalls",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    this.highLayer = this.map.createLayer(
+      "HighWalls",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    this.roofLayer = this.map.createLayer(
+      "Roofs",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
     scene.physics.world.setBounds(
       0,
       0,
