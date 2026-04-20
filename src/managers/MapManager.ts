@@ -9,13 +9,13 @@ export class MapManager {
   constructor(scene: Phaser.Scene) {
     this.map = scene.make.tilemap({ key: "map" });
     const tileset = this.map.addTilesetImage("scenario", "tiles");
+    const ground = this.map.createLayer("GroundLayer", tileset!, 0, 0);
+    const walls = this.map.createLayer("GroundWalls", tileset!, 0, 0);
+    if (walls) {
+      this.groundLayer = walls as Phaser.Tilemaps.TilemapLayer;
+      this.groundLayer.setCollisionByProperty({ collides: true });
+    }
 
-    this.groundLayer = this.map.createLayer(
-      "GroundWalls",
-      tileset!,
-      0,
-      0
-    ) as Phaser.Tilemaps.TilemapLayer;
     this.highLayer = this.map.createLayer(
       "HighWalls",
       tileset!,
