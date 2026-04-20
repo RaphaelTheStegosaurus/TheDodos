@@ -23,8 +23,8 @@ export class Game extends Phaser.Scene {
     this.load.setPath("assets");
     this.load.tilemapTiledJSON("map", "map.json");
     this.load.image("tiles", "scenario.png");
-    this.load.image("red-box", "led-square-red.svg");
-    this.load.image("green-box", "led-square-green.svg");
+    this.load.image("red-box", "EXPLOSIVECRATE.png");
+    this.load.image("green-box", "REPAIRCRATE.png");
     this.load.image("player-sprite", "character.png");
   }
 
