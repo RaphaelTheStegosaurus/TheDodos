@@ -1,15 +1,17 @@
 import * as Phaser from "phaser";
 import { Player } from "./Player";
-
 export class Stairs extends Phaser.GameObjects.Zone {
+  public goToLevel: number;
   constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
+    goToLevel: number
   ) {
     super(scene, x, y, width, height);
+    this.goToLevel = goToLevel;
     scene.add.existing(this);
     scene.physics.add.existing(this, true);
   }

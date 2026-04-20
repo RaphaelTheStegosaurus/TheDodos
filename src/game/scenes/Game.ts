@@ -14,6 +14,7 @@ export class Game extends Phaser.Scene {
   private player!: Player;
   private crates!: Phaser.Physics.Arcade.StaticGroup;
   private mapManager!: MapManager;
+  private currentLevel: number = 0;
 
   constructor() {
     super("Game");
@@ -32,6 +33,7 @@ export class Game extends Phaser.Scene {
     this.mapManager = new MapManager(this);
 
     this.player = new Player(this, 400, 300);
+    this.physics.add.collider(this.player, this.mapManager.groundLayer);
     if (this.player) {
       this.setupCamera(this.mapManager.width, this.mapManager.height);
     }
@@ -45,31 +47,60 @@ export class Game extends Phaser.Scene {
     this.effects = new EffectManager(this);
     this.setupEventListeners();
 
-    this.physics.add.collider(
-      this.player,
-      this.mapManager.groundLayer,
-      undefined,
-      () => {
-        return this.player.currentLevel === 0;
-      }
-    );
+    const stairObjects = this.mapManager.map.getObjectLayer("Objects")?.objects;
 
-    this.physics.add.collider(
-      this.player,
-      this.mapManager.highLayer,
-      undefined,
-      () => {
-        return this.player.currentLevel === 1;
+    stairObjects?.forEach((obj) => {
+      // Verificamos por nombre, tipo o clase por si acaso
+      const isStair =
+        obj.name === "Stairs" ||
+        obj.type === "Stairs" ||
+        (obj as any).class === "Stairs";
+
+      if (isStair) {
+        // Buscamos la propiedad de nivel
+        const levelProp = obj.properties?.find(
+          (p: any) => p.name === "goToLevel"
+        );
+        const levelValue = levelProp ? levelProp.value : 1;
+
+        const stairs = new Stairs(
+          this,
+          obj.x! + obj.width! / 2,
+          obj.y! + obj.height! / 2,
+          obj.width!,
+          obj.height!,
+          levelValue
+        );
+
+        // Usamos overlap para que no bloquee al jugador, solo detecte que está encima
+        this.physics.add.overlap(this.player, stairs, () => {
+          console.log("¡Pisando escalera!");
+          this.changeLevel(levelValue);
+        });
       }
-    );
-    const stairs = new Stairs(this, 600, 400, 64, 32);
-    this.physics.add.overlap(this.player, stairs, () => {
-      stairs.handleOverlap(this.player);
     });
+
+    const climbArea =
+      this.mapManager.map.getObjectLayer("ClimbZone")?.objects[0];
+    if (climbArea) {
+      const zone = this.add.zone(
+        climbArea.x!,
+        climbArea.y!,
+        climbArea.width!,
+        climbArea.height!
+      );
+      this.physics.add.existing(zone, true);
+
+      this.physics.add.overlap(this.player, zone, () => {
+        console.log("Dodo en la escalera (vía Zona)");
+        this.changeLevel(1);
+      });
+    }
   }
   update() {
     if (this.player) {
       this.player.update();
+      this.checkStairs();
       this.handleRoofTransparency();
     }
   }
@@ -146,6 +177,10 @@ export class Game extends Phaser.Scene {
   }
 
   private handleRoofTransparency() {
+    if (this.mapManager.roofLayer.depth < 10) {
+      this.mapManager.roofLayer.alpha = 1;
+      return;
+    }
     const tile = this.mapManager.roofLayer.getTileAtWorldXY(
       this.player.x,
       this.player.y
@@ -162,6 +197,41 @@ export class Game extends Phaser.Scene {
         1,
         0.1
       );
+    }
+  }
+  private checkStairs() {
+    // Obtenemos el tile de la capa de muros donde está el jugador
+    const tile = this.mapManager.groundLayer.getTileAtWorldXY(
+      this.player.x,
+      this.player.y
+    );
+    if (tile) {
+      if (tile.properties.stairType === "up") {
+        console.log("¡Escalera detectada!");
+        this.changeLevel(1);
+      }
+    }
+    if (tile && tile.properties.stairType) {
+      if (tile.properties.stairType === "up") {
+        console.log("Subiendo al techo");
+
+        this.changeLevel(1); // Ir al techo
+      } else if (tile.properties.stairType === "down") {
+        console.log("bajando al suelo");
+        this.changeLevel(0); // Ir al suelo
+      }
+    }
+  }
+  private changeLevel(level: number) {
+    this.currentLevel = level;
+    if (this.currentLevel === 1) {
+      // Modo "Planta Alta"
+      this.mapManager.roofLayer.setDepth(5); // El techo ahora es suelo
+      this.mapManager.roofLayer.alpha = 1; // Se ve totalmente sólido
+      this.player.setDepth(10); // El jugador arriba de todo
+    } else {
+      // Modo "Calle"
+      this.mapManager.roofLayer.setDepth(100); // El techo vuelve a tapar
     }
   }
 }

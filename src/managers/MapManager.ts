@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 
 export class MapManager {
-  private map: Phaser.Tilemaps.Tilemap;
+  public map: Phaser.Tilemaps.Tilemap;
   public groundLayer!: Phaser.Tilemaps.TilemapLayer;
   public highLayer!: Phaser.Tilemaps.TilemapLayer;
   public roofLayer!: Phaser.Tilemaps.TilemapLayer;
@@ -13,6 +13,7 @@ export class MapManager {
     const walls = this.map.createLayer("GroundWalls", tileset!, 0, 0);
     if (walls) {
       this.groundLayer = walls as Phaser.Tilemaps.TilemapLayer;
+      // IMPORTANTE: Asegúrate de que en Tiled el tileset tenga la propiedad 'collides' (bool) = true
       this.groundLayer.setCollisionByProperty({ collides: true });
     }
 
@@ -22,6 +23,9 @@ export class MapManager {
       0,
       0
     ) as Phaser.Tilemaps.TilemapLayer;
+    if (this.highLayer) {
+      this.highLayer.setCollisionByProperty({ collides: true });
+    }
     this.roofLayer = this.map.createLayer(
       "Roofs",
       tileset!,
