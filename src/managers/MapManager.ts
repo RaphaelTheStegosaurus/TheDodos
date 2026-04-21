@@ -17,6 +17,20 @@ export class MapManager {
 
     this.map.createLayer("GroundLayer", tileset, 0, 0);
 
+    const highWalls = this.map.createLayer(
+      "HighWalls",
+      tileset!,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    if (highWalls) {
+      this.highLayer = highWalls;
+      this.highLayer.forEachTile((tile) => {
+        if (tile.index > 0) {
+          tile.setCollision(true);
+        }
+      });
+    }
     this.groundLayer = this.map.createLayer(
       "GroundWalls",
       tileset,
