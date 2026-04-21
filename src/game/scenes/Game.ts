@@ -40,9 +40,18 @@ export class Game extends Phaser.Scene {
   create() {
     this.mapManager = new MapManager(this);
 
-    this.player = new Player(this, 400, 300);
+    this.player = new Player(this, 1062, 578);
+    // Activamos colisión física con las paredes del suelo
+    if (this.mapManager.groundLayer) {
+      this.physics.add.collider(this.player, this.mapManager.groundLayer);
+    }
+
+    // Activamos colisión física con las paredes altas
+    if (this.mapManager.highLayer) {
+      this.physics.add.collider(this.player, this.mapManager.highLayer);
+    }
+
     this.setupLevelInteractions();
-    this.physics.add.collider(this.player, this.mapManager.groundLayer);
     if (this.player) {
       this.setupCamera(this.mapManager.width, this.mapManager.height);
     }
@@ -55,6 +64,16 @@ export class Game extends Phaser.Scene {
     this.ui = new UIManager(this);
     this.effects = new EffectManager(this);
     this.setupEventListeners();
+
+    // Esto dibujará las colisiones reales en pantalla
+    const debugGraphics = this.add.graphics().setAlpha(0.7);
+    if (this.mapManager.groundLayer) {
+      this.mapManager.groundLayer.renderDebug(debugGraphics, {
+        tileColor: null,
+        collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Naranja = Colisión
+        faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+      });
+    }
   }
   update() {
     this.player.update();

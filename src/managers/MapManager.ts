@@ -9,29 +9,34 @@ export class MapManager {
   constructor(scene: Phaser.Scene) {
     this.map = scene.make.tilemap({ key: "map" });
     const tileset = this.map.addTilesetImage("scenario", "tiles");
-    const ground = this.map.createLayer("GroundLayer", tileset!, 0, 0);
+
+    // 1. Capa de suelo (solo visual)
+    this.map.createLayer("GroundLayer", tileset!, 0, 0);
+
+    // 2. Paredes base
     const walls = this.map.createLayer("GroundWalls", tileset!, 0, 0);
     if (walls) {
       this.groundLayer = walls as Phaser.Tilemaps.TilemapLayer;
-      // IMPORTANTE: Asegúrate de que en Tiled el tileset tenga la propiedad 'collides' (bool) = true
+      // IMPORTANTE: Aquí le decimos que use la propiedad que vimos en el JSON
       this.groundLayer.setCollisionByProperty({ collides: true });
     }
 
-    this.highLayer = this.map.createLayer(
-      "HighWalls",
-      tileset!,
-      0,
-      0
-    ) as Phaser.Tilemaps.TilemapLayer;
-    if (this.highLayer) {
+    // 3. Paredes altas (segundo piso/decoración alta)
+    const high = this.map.createLayer("HighWalls", tileset!, 0, 0);
+    if (high) {
+      this.highLayer = high as Phaser.Tilemaps.TilemapLayer;
       this.highLayer.setCollisionByProperty({ collides: true });
     }
+
+    // 4. Techos
     this.roofLayer = this.map.createLayer(
       "Roofs",
       tileset!,
       0,
       0
     ) as Phaser.Tilemaps.TilemapLayer;
+
+    // Ajustamos los límites de la física al tamaño del mapa
     scene.physics.world.setBounds(
       0,
       0,
