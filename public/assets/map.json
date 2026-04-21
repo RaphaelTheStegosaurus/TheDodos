@@ -1002,16 +1002,40 @@
       "name": "Objects",
       "objects": [
         {
-          "height": 56.5,
-          "id": 12,
+          "height": 21,
+          "id": 13,
           "name": "",
           "opacity": 1,
+          "properties": {
+            "stairType": "down"
+          },
+          "propertytypes": {
+            "stairType": "string"
+          },
           "rotation": 0,
           "type": "Stairs",
           "visible": true,
-          "width": 48,
-          "x": 1065,
-          "y": 570.5
+          "width": 53,
+          "x": 1062,
+          "y": 578
+        },
+        {
+          "height": 21,
+          "id": 14,
+          "name": "",
+          "opacity": 1,
+          "properties": {
+            "stairType": "up"
+          },
+          "propertytypes": {
+            "stairType": "string"
+          },
+          "rotation": 0,
+          "type": "Stairs",
+          "visible": true,
+          "width": 55.5,
+          "x": 1061,
+          "y": 605
         }
       ],
       "opacity": 1,
@@ -1892,7 +1916,7 @@
     }
   ],
   "nextlayerid": 10,
-  "nextobjectid": 13,
+  "nextobjectid": 15,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.12.1",
@@ -2172,15 +2196,6 @@
         }
       },
       "tiles": {
-        "18": {
-          "type": "collides"
-        },
-        "19": {
-          "type": "collides"
-        },
-        "28": {
-          "type": "collides"
-        },
         "29": {
           "objectgroup": {
             "draworder": "index",
@@ -2204,11 +2219,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
-        },
-        "32": {
-          "type": "collides"
+          }
         },
         "33": {
           "objectgroup": {
@@ -2285,12 +2296,6 @@
             "y": 0
           },
           "type": "stairs"
-        },
-        "39": {
-          "type": "collides"
-        },
-        "40": {
-          "type": "collides"
         },
         "41": {
           "type": "doors"
@@ -2386,12 +2391,6 @@
           },
           "type": "stairs"
         },
-        "45": {
-          "type": "collides"
-        },
-        "49": {
-          "type": "collides"
-        },
         "50": {
           "objectgroup": {
             "draworder": "index",
@@ -2415,8 +2414,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "51": {
           "type": "doors"
@@ -2488,12 +2486,6 @@
           },
           "type": "stairs"
         },
-        "55": {
-          "type": "collides"
-        },
-        "59": {
-          "type": "collides"
-        },
         "60": {
           "objectgroup": {
             "draworder": "topdown",
@@ -2554,8 +2546,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "62": {
           "objectgroup": {
@@ -2580,8 +2571,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "63": {
           "objectgroup": {
@@ -2618,8 +2608,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "64": {
           "objectgroup": {
@@ -2656,8 +2645,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "65": {
           "objectgroup": {
@@ -2694,8 +2682,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "66": {
           "objectgroup": {
@@ -2732,8 +2719,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "67": {
           "objectgroup": {
@@ -2770,8 +2756,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "68": {
           "objectgroup": {
@@ -2808,8 +2793,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "70": {
           "objectgroup": {
@@ -2834,8 +2818,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "71": {
           "objectgroup": {
@@ -2885,8 +2868,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "73": {
           "objectgroup": {
@@ -2923,8 +2905,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "74": {
           "objectgroup": {
@@ -2986,8 +2967,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "76": {
           "objectgroup": {
@@ -3024,8 +3004,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "78": {
           "objectgroup": {
@@ -3050,8 +3029,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "80": {
           "objectgroup": {
@@ -3076,8 +3054,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "81": {
           "objectgroup": {
@@ -3102,8 +3079,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "82": {
           "objectgroup": {
@@ -3128,8 +3104,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "83": {
           "objectgroup": {
@@ -3154,8 +3129,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "84": {
           "objectgroup": {
@@ -3192,8 +3166,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "85": {
           "objectgroup": {
@@ -3230,8 +3203,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "86": {
           "objectgroup": {
@@ -3256,8 +3228,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "87": {
           "objectgroup": {
@@ -3282,8 +3253,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "88": {
           "objectgroup": {
@@ -3320,8 +3290,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "90": {
           "objectgroup": {
@@ -3346,8 +3315,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "91": {
           "objectgroup": {
@@ -3372,8 +3340,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         },
         "92": {
           "objectgroup": {
@@ -3398,8 +3365,7 @@
             "visible": true,
             "x": 0,
             "y": 0
-          },
-          "type": "collides"
+          }
         }
       },
       "tilewidth": 32
