@@ -23,19 +23,17 @@ export class MapManager {
       0,
       0
     ) as Phaser.Tilemaps.TilemapLayer;
-    const wallIDs = [
-      29, 32, 39, 40, 45, 49, 50, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
-      70, 72, 73, 75, 76, 78, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92,
-    ];
 
     this.groundLayer.forEachTile((tile) => {
-      if (wallIDs.includes(tile.index)) {
-        tile.setCollision(true);
-      }
-      if (tile.index >= 60 && tile.index <= 120) {
+      if (tile.index > 0) {
         tile.setCollision(true);
       }
     });
+
+    // const wallIDs = [
+    //   29, 32, 39, 40, 45, 49, 50, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
+    //   70, 72, 73, 75, 76, 78, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92,
+    // ];
     const high = this.map.createLayer(
       "HighWalls",
       tileset,

@@ -240,12 +240,15 @@ export class Game extends Phaser.Scene {
   }
 
   private executeLevelChange(level: number) {
+    // this.currentLevel = level;
     if (level === 1) {
       this.mapManager.roofLayer.setDepth(5);
       this.player.setDepth(10);
+      // this.groundCollider.active = false;
     } else {
       this.mapManager.roofLayer.setDepth(100);
       this.player.setDepth(10);
+      // this.groundCollider.active = true;
     }
   }
 }
