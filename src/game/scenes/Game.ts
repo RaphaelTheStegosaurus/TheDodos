@@ -173,6 +173,7 @@ export class Game extends Phaser.Scene {
   }
   private changeLevel(level: number) {
     this.currentLevel = level;
+
     if (level === 1) {
       this.mapManager.roofLayer.setDepth(5);
       this.player.setDepth(10);
@@ -217,10 +218,10 @@ export class Game extends Phaser.Scene {
 
       this.physics.add.overlap(this.player, stairsZone, () => {
         if (typeProp === "up" && this.currentLevel === 0) {
-          console.log("Subiendo...");
+          console.log(`player level:${this.currentLevel} Subiendo a 1`);
           this.changeLevel(1);
         } else if (typeProp === "down" && this.currentLevel === 1) {
-          console.log("Bajando...");
+          console.log(`player level:${this.currentLevel} Bajando a 0`);
           this.changeLevel(0);
         }
       });
