@@ -57,8 +57,6 @@ export class Game extends Phaser.Scene {
       this.mapManager.highLayer,
       undefined,
       () => {
-        // Solo bloqueamos si el jugador está en el ROOF
-        // Si está en el GROUND, puede pasar por "debajo" (aleros del techo)
         return this.state === GameState.ROOF;
       },
       this
@@ -162,6 +160,7 @@ export class Game extends Phaser.Scene {
       this.state === GameState.CLIMBING_UP
     ) {
       this.mapManager.roofLayer.alpha = 1;
+      this.mapManager.highLayer.alpha = 1;
       return;
     }
 
@@ -173,6 +172,11 @@ export class Game extends Phaser.Scene {
     const targetAlpha = tile ? 0.3 : 1;
     this.mapManager.roofLayer.alpha = Phaser.Math.Linear(
       this.mapManager.roofLayer.alpha,
+      targetAlpha,
+      0.1
+    );
+    this.mapManager.highLayer.alpha = Phaser.Math.Linear(
+      this.mapManager.highLayer.alpha,
       targetAlpha,
       0.1
     );
