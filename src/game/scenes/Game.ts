@@ -24,9 +24,6 @@ export class Game extends Phaser.Scene {
   private currentLevel: number = 0;
   private state: GameState = GameState.GROUND;
   private activeStair: Stairs | null = null;
-  private isInsideStairs: boolean = false;
-
-  private lastTransitionTime: number = 0;
 
   constructor() {
     super("Game");
@@ -163,27 +160,7 @@ export class Game extends Phaser.Scene {
       );
     }
   }
-  private checkStairs() {
-    const tile = this.mapManager.groundLayer.getTileAtWorldXY(
-      this.player.x,
-      this.player.y
-    );
 
-    if (tile && tile.properties.stairType) {
-      const type = tile.properties.stairType;
-
-      // Solo subimos si estamos abajo
-      if (type === "up" && this.currentLevel === 0) {
-        console.log("Subiendo...");
-        this.changeLevel(1);
-      }
-      // Solo bajamos si estamos arriba
-      else if (type === "down" && this.currentLevel === 1) {
-        console.log("Bajando...");
-        this.changeLevel(0);
-      }
-    }
-  }
   private changeLevel(level: number) {
     if (level === 1) {
       this.mapManager.roofLayer.setDepth(5);
@@ -208,7 +185,6 @@ export class Game extends Phaser.Scene {
         obj.height!,
         1
       );
-      // Guardamos las zonas en un grupo para facilitar la detección de salida
       this.physics.add.overlap(this.player, stairsZone, () => {
         this.handleStairEntry(stairsZone);
       });
@@ -258,50 +234,6 @@ export class Game extends Phaser.Scene {
 
       console.log("Nuevo estado:", GameState[this.state]);
       this.activeStair = null;
-    }
-  }
-  private handleStateTransition(sensorType: string) {
-    const now = this.time.now;
-    if (now - this.lastTransitionTime < 200) return;
-    switch (this.state) {
-      case GameState.GROUND:
-        if (sensorType === "up") {
-          this.state = GameState.CLIMBING_UP;
-          this.executeLevelChange(1);
-        }
-        break;
-
-      case GameState.ROOF:
-        if (sensorType === "down") {
-          this.state = GameState.CLIMBING_DOWN;
-          this.executeLevelChange(0);
-        }
-        break;
-
-      // Los estados de transición ayudan a ignorar rebotes accidentales
-      case GameState.CLIMBING_UP:
-        // Solo volvemos a estado ROOF cuando el jugador deja de tocar el sensor 'up'
-        // O podemos usar un timer/distancia para confirmar que ya subió
-        this.state = GameState.ROOF;
-        break;
-
-      case GameState.CLIMBING_DOWN:
-        this.state = GameState.GROUND;
-        break;
-    }
-    this.lastTransitionTime = now;
-  }
-
-  private executeLevelChange(level: number) {
-    this.currentLevel = level;
-    if (level === 1) {
-      this.mapManager.roofLayer.setDepth(5);
-      this.player.setDepth(10);
-      console.log(">>> Transición completada: TECHO");
-    } else {
-      this.mapManager.roofLayer.setDepth(100);
-      this.player.setDepth(10);
-      console.log(">>> Transición completada: SUELO");
     }
   }
 }
