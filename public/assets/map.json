@@ -1002,40 +1002,16 @@
       "name": "Objects",
       "objects": [
         {
-          "height": 21,
-          "id": 13,
+          "height": 59.5,
+          "id": 15,
           "name": "",
           "opacity": 1,
-          "properties": {
-            "stairType": "down"
-          },
-          "propertytypes": {
-            "stairType": "string"
-          },
           "rotation": 0,
           "type": "Stairs",
           "visible": true,
-          "width": 53,
-          "x": 1062,
-          "y": 578
-        },
-        {
-          "height": 21,
-          "id": 14,
-          "name": "",
-          "opacity": 1,
-          "properties": {
-            "stairType": "up"
-          },
-          "propertytypes": {
-            "stairType": "string"
-          },
-          "rotation": 0,
-          "type": "Stairs",
-          "visible": true,
-          "width": 55.5,
-          "x": 1061,
-          "y": 605
+          "width": 61,
+          "x": 1057.5,
+          "y": 570
         }
       ],
       "opacity": 1,
@@ -1916,7 +1892,7 @@
     }
   ],
   "nextlayerid": 10,
-  "nextobjectid": 15,
+  "nextobjectid": 16,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.12.1",

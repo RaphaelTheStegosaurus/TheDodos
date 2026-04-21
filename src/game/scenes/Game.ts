@@ -7,6 +7,13 @@ import { EffectManager } from "../../effects/EffectManager";
 import { MapManager } from "../../managers/MapManager";
 import { Stairs } from "../../entities/Stairs";
 
+enum GameState {
+  GROUND, // Caminando normal abajo
+  CLIMBING_UP, // En proceso de subir
+  ROOF, // Caminando normal arriba
+  CLIMBING_DOWN, // En proceso de bajar
+}
+
 export class Game extends Phaser.Scene {
   private ui!: UIManager;
   private effects!: EffectManager;
@@ -15,6 +22,11 @@ export class Game extends Phaser.Scene {
   private crates!: Phaser.Physics.Arcade.StaticGroup;
   private mapManager!: MapManager;
   private currentLevel: number = 0;
+  private state: GameState = GameState.GROUND;
+  private activeStair: Stairs | null = null;
+  private isInsideStairs: boolean = false;
+
+  private lastTransitionTime: number = 0;
 
   constructor() {
     super("Game");
@@ -52,6 +64,7 @@ export class Game extends Phaser.Scene {
     if (this.player) {
       this.player.update();
       this.handleRoofTransparency();
+      this.checkStairExit();
     }
   }
   private setupEventListeners() {
@@ -172,8 +185,6 @@ export class Game extends Phaser.Scene {
     }
   }
   private changeLevel(level: number) {
-    this.currentLevel = level;
-
     if (level === 1) {
       this.mapManager.roofLayer.setDepth(5);
       this.player.setDepth(10);
@@ -183,30 +194,12 @@ export class Game extends Phaser.Scene {
     }
   }
   private setupLevelInteractions() {
-    const objectLayer = this.mapManager.map.getObjectLayer("Objects");
-    if (!objectLayer) {
-      console.warn("No se encontró la capa de objetos 'Objects'");
-      return;
-    }
+    const stairObjects = this.mapManager.map.getObjectLayer("Objects")?.objects;
 
-    objectLayer.objects.forEach((obj) => {
+    stairObjects?.forEach((obj) => {
       const isStair = obj.type === "Stairs" || (obj as any).class === "Stairs";
       if (!isStair) return;
-      let typeProp: string | undefined;
-      if (Array.isArray(obj.properties)) {
-        typeProp = obj.properties.find(
-          (p: any) => p.name === "stairType"
-        )?.value;
-      } else if (obj.properties) {
-        typeProp = (obj.properties as any).stairType;
-      }
 
-      if (!typeProp) {
-        console.warn(
-          `El objeto ${obj.id} es 'Stairs' pero no tiene 'stairType'`
-        );
-        return;
-      }
       const stairsZone = new Stairs(
         this,
         obj.x! + obj.width! / 2,
@@ -215,16 +208,100 @@ export class Game extends Phaser.Scene {
         obj.height!,
         1
       );
-
+      // Guardamos las zonas en un grupo para facilitar la detección de salida
       this.physics.add.overlap(this.player, stairsZone, () => {
-        if (typeProp === "up" && this.currentLevel === 0) {
-          console.log(`player level:${this.currentLevel} Subiendo a 1`);
-          this.changeLevel(1);
-        } else if (typeProp === "down" && this.currentLevel === 1) {
-          console.log(`player level:${this.currentLevel} Bajando a 0`);
-          this.changeLevel(0);
-        }
+        this.handleStairEntry(stairsZone);
       });
     });
+  }
+  private handleStairEntry(zone: Stairs) {
+    this.activeStair = zone;
+
+    if (this.state === GameState.GROUND) {
+      if (this.player.body!.velocity.y < 0) {
+        this.state = GameState.CLIMBING_UP;
+        console.log("Estado: CLIMBING_UP");
+      }
+    } else if (this.state === GameState.ROOF) {
+      if (this.player.body!.velocity.y > 0) {
+        this.state = GameState.CLIMBING_DOWN;
+        console.log("Estado: CLIMBING_DOWN");
+      }
+    }
+  }
+  private checkStairExit() {
+    if (!this.activeStair) return;
+    const isTouching = this.physics.overlap(this.player, this.activeStair);
+
+    if (!isTouching) {
+      const playerY = this.player.y;
+      const stairTop = this.activeStair.y - this.activeStair.height / 2;
+      const stairBottom = this.activeStair.y + this.activeStair.height / 2;
+
+      if (this.state === GameState.CLIMBING_UP) {
+        if (playerY < stairTop) {
+          this.state = GameState.ROOF;
+          this.changeLevel(1);
+        } else {
+          this.state = GameState.GROUND;
+          this.changeLevel(0);
+        }
+      } else if (this.state === GameState.CLIMBING_DOWN) {
+        if (playerY > stairBottom) {
+          this.state = GameState.GROUND;
+          this.changeLevel(0);
+        } else {
+          this.state = GameState.ROOF;
+          this.changeLevel(1);
+        }
+      }
+
+      console.log("Nuevo estado:", GameState[this.state]);
+      this.activeStair = null;
+    }
+  }
+  private handleStateTransition(sensorType: string) {
+    const now = this.time.now;
+    if (now - this.lastTransitionTime < 200) return;
+    switch (this.state) {
+      case GameState.GROUND:
+        if (sensorType === "up") {
+          this.state = GameState.CLIMBING_UP;
+          this.executeLevelChange(1);
+        }
+        break;
+
+      case GameState.ROOF:
+        if (sensorType === "down") {
+          this.state = GameState.CLIMBING_DOWN;
+          this.executeLevelChange(0);
+        }
+        break;
+
+      // Los estados de transición ayudan a ignorar rebotes accidentales
+      case GameState.CLIMBING_UP:
+        // Solo volvemos a estado ROOF cuando el jugador deja de tocar el sensor 'up'
+        // O podemos usar un timer/distancia para confirmar que ya subió
+        this.state = GameState.ROOF;
+        break;
+
+      case GameState.CLIMBING_DOWN:
+        this.state = GameState.GROUND;
+        break;
+    }
+    this.lastTransitionTime = now;
+  }
+
+  private executeLevelChange(level: number) {
+    this.currentLevel = level;
+    if (level === 1) {
+      this.mapManager.roofLayer.setDepth(5);
+      this.player.setDepth(10);
+      console.log(">>> Transición completada: TECHO");
+    } else {
+      this.mapManager.roofLayer.setDepth(100);
+      this.player.setDepth(10);
+      console.log(">>> Transición completada: SUELO");
+    }
   }
 }
