@@ -2187,7 +2187,6 @@
         "18": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2213,7 +2212,6 @@
         "19": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2239,7 +2237,6 @@
         "28": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2271,7 +2268,7 @@
               {
                 "height": 32,
                 "id": 1,
-                "name": "",
+                "name": "collides",
                 "opacity": 1,
                 "rotation": 0,
                 "type": "",
@@ -2291,7 +2288,6 @@
         "30": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2317,7 +2313,6 @@
         "32": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2368,7 +2363,6 @@
         "39": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2394,7 +2388,6 @@
         "40": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2420,7 +2413,6 @@
         "45": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2446,7 +2438,6 @@
         "49": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2472,7 +2463,6 @@
         "50": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2498,7 +2488,6 @@
         "55": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2524,7 +2513,6 @@
         "59": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2550,7 +2538,6 @@
         "60": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2576,7 +2563,6 @@
         "61": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2608,7 +2594,7 @@
               {
                 "height": 32,
                 "id": 1,
-                "name": "",
+                "name": "collides",
                 "opacity": 1,
                 "rotation": 0,
                 "type": "",
@@ -2628,7 +2614,6 @@
         "63": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2654,7 +2639,6 @@
         "64": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2680,7 +2664,6 @@
         "65": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2706,7 +2689,6 @@
         "66": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2732,7 +2714,6 @@
         "67": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2758,7 +2739,6 @@
         "68": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2784,7 +2764,6 @@
         "70": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2816,7 +2795,7 @@
               {
                 "height": 32,
                 "id": 1,
-                "name": "",
+                "name": "collides",
                 "opacity": 1,
                 "rotation": 0,
                 "type": "",
@@ -2836,7 +2815,6 @@
         "73": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2862,7 +2840,6 @@
         "75": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2888,7 +2865,6 @@
         "76": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2914,7 +2890,6 @@
         "78": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2940,7 +2915,6 @@
         "80": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2966,7 +2940,6 @@
         "81": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -2998,7 +2971,7 @@
               {
                 "height": 32,
                 "id": 1,
-                "name": "",
+                "name": "collides",
                 "opacity": 1,
                 "rotation": 0,
                 "type": "",
@@ -3018,7 +2991,6 @@
         "83": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3044,7 +3016,6 @@
         "84": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3070,7 +3041,6 @@
         "85": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3096,7 +3066,6 @@
         "86": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3122,7 +3091,6 @@
         "87": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3148,7 +3116,6 @@
         "88": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3174,7 +3141,6 @@
         "90": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3200,7 +3166,6 @@
         "91": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {
@@ -3226,7 +3191,6 @@
         "92": {
           "objectgroup": {
             "draworder": "index",
-            "id": 2,
             "name": "",
             "objects": [
               {

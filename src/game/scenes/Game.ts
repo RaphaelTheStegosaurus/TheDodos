@@ -40,13 +40,11 @@ export class Game extends Phaser.Scene {
   create() {
     this.mapManager = new MapManager(this);
 
-    this.player = new Player(this, 1062, 578);
-    // Activamos colisión física con las paredes del suelo
+    this.player = new Player(this, 400, 300);
     if (this.mapManager.groundLayer) {
       this.physics.add.collider(this.player, this.mapManager.groundLayer);
     }
 
-    // Activamos colisión física con las paredes altas
     if (this.mapManager.highLayer) {
       this.physics.add.collider(this.player, this.mapManager.highLayer);
     }

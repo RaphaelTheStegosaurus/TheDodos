@@ -10,33 +10,50 @@ export class MapManager {
     this.map = scene.make.tilemap({ key: "map" });
     const tileset = this.map.addTilesetImage("scenario", "tiles");
 
-    // 1. Capa de suelo (solo visual)
-    this.map.createLayer("GroundLayer", tileset!, 0, 0);
-
-    // 2. Paredes base
-    const walls = this.map.createLayer("GroundWalls", tileset!, 0, 0);
-    if (walls) {
-      this.groundLayer = walls as Phaser.Tilemaps.TilemapLayer;
-      // IMPORTANTE: Aquí le decimos que use la propiedad que vimos en el JSON
-      this.groundLayer.setCollisionByProperty({ collides: true });
+    if (!tileset) {
+      console.error("No se pudo cargar el tileset");
+      return;
     }
 
-    // 3. Paredes altas (segundo piso/decoración alta)
-    const high = this.map.createLayer("HighWalls", tileset!, 0, 0);
+    this.map.createLayer("GroundLayer", tileset, 0, 0);
+
+    this.groundLayer = this.map.createLayer(
+      "GroundWalls",
+      tileset,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
+    const wallIDs = [
+      29, 32, 39, 40, 45, 49, 50, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
+      70, 72, 73, 75, 76, 78, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92,
+    ];
+
+    this.groundLayer.forEachTile((tile) => {
+      if (wallIDs.includes(tile.index)) {
+        tile.setCollision(true);
+      }
+      if (tile.index >= 60 && tile.index <= 120) {
+        tile.setCollision(true);
+      }
+    });
+    const high = this.map.createLayer(
+      "HighWalls",
+      tileset,
+      0,
+      0
+    ) as Phaser.Tilemaps.TilemapLayer;
     if (high) {
-      this.highLayer = high as Phaser.Tilemaps.TilemapLayer;
+      this.highLayer = high;
       this.highLayer.setCollisionByProperty({ collides: true });
     }
 
-    // 4. Techos
     this.roofLayer = this.map.createLayer(
       "Roofs",
-      tileset!,
+      tileset,
       0,
       0
     ) as Phaser.Tilemaps.TilemapLayer;
 
-    // Ajustamos los límites de la física al tamaño del mapa
     scene.physics.world.setBounds(
       0,
       0,
