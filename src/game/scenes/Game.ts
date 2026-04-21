@@ -23,6 +23,7 @@ export class Game extends Phaser.Scene {
   private mapManager!: MapManager;
   private state: GameState = GameState.GROUND;
   private activeStair: Stairs | null = null;
+  private groundCollider!: Phaser.Physics.Arcade.Collider;
 
   constructor() {
     super("Game");
@@ -42,7 +43,15 @@ export class Game extends Phaser.Scene {
 
     this.player = new Player(this, 400, 300);
     if (this.mapManager.groundLayer) {
-      this.physics.add.collider(this.player, this.mapManager.groundLayer);
+      this.groundCollider = this.physics.add.collider(
+        this.player,
+        this.mapManager.groundLayer,
+        undefined,
+        () => {
+          return this.state === GameState.GROUND;
+        },
+        this
+      );
     }
 
     if (this.mapManager.highLayer) {
@@ -62,16 +71,6 @@ export class Game extends Phaser.Scene {
     this.ui = new UIManager(this);
     this.effects = new EffectManager(this);
     this.setupEventListeners();
-
-    // Esto dibujará las colisiones reales en pantalla
-    const debugGraphics = this.add.graphics().setAlpha(0.7);
-    if (this.mapManager.groundLayer) {
-      this.mapManager.groundLayer.renderDebug(debugGraphics, {
-        tileColor: null,
-        collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Naranja = Colisión
-        faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-      });
-    }
   }
   update() {
     this.player.update();
@@ -240,15 +239,25 @@ export class Game extends Phaser.Scene {
   }
 
   private executeLevelChange(level: number) {
-    // this.currentLevel = level;
     if (level === 1) {
-      this.mapManager.roofLayer.setDepth(5);
-      this.player.setDepth(10);
-      // this.groundCollider.active = false;
+      // SUBIENDO AL TECHO
+      this.mapManager.roofLayer.setDepth(5); // El techo baja visualmente
+      this.player.setDepth(10); // El Dodo siempre arriba
+
+      if (this.groundCollider) {
+        // this.physics.add.collider(this.player, this.mapManager.groundLayer);
+        this.groundCollider.active = false; // ¡LIBERTAD! Ya no choca con los muros de abajo
+      }
+      console.log("Estado: ROOF - Muros desactivados");
     } else {
-      this.mapManager.roofLayer.setDepth(100);
+      // BAJANDO AL SUELO
+      this.mapManager.roofLayer.setDepth(100); // El techo sube y oculta al Dodo
       this.player.setDepth(10);
-      // this.groundCollider.active = true;
+
+      if (this.groundCollider) {
+        this.groundCollider.active = true; // SEGURIDAD: Los muros vuelven a ser sólidos
+      }
+      console.log("Estado: GROUND - Muros reactivados");
     }
   }
 }
