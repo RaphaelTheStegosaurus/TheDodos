@@ -135,9 +135,11 @@ export class Game extends Phaser.Scene {
   }
 
   private handleRoofTransparency() {
-    if (this.state === GameState.ROOF) {
-      console.log("estoy arriba");
-
+    if (
+      this.state === GameState.ROOF ||
+      this.state === GameState.CLIMBING_DOWN ||
+      this.state === GameState.CLIMBING_UP
+    ) {
       this.mapManager.roofLayer.alpha = 1;
       return;
     }
