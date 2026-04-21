@@ -42,21 +42,27 @@ export class Game extends Phaser.Scene {
     this.mapManager = new MapManager(this);
 
     this.player = new Player(this, 400, 300);
-    if (this.mapManager.groundLayer) {
-      this.groundCollider = this.physics.add.collider(
-        this.player,
-        this.mapManager.groundLayer,
-        undefined,
-        () => {
-          return this.state === GameState.GROUND;
-        },
-        this
-      );
-    }
+    this.groundCollider = this.physics.add.collider(
+      this.player,
+      this.mapManager.groundLayer,
+      undefined,
+      () => {
+        return this.state === GameState.GROUND;
+      },
+      this
+    );
 
-    if (this.mapManager.highLayer) {
-      this.physics.add.collider(this.player, this.mapManager.highLayer);
-    }
+    this.physics.add.collider(
+      this.player,
+      this.mapManager.highLayer,
+      undefined,
+      () => {
+        // Solo bloqueamos si el jugador está en el ROOF
+        // Si está en el GROUND, puede pasar por "debajo" (aleros del techo)
+        return this.state === GameState.ROOF;
+      },
+      this
+    );
 
     this.setupLevelInteractions();
     if (this.player) {
