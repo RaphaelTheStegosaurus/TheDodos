@@ -18,8 +18,8 @@ export class Game extends Phaser.Scene {
   private ui!: UIManager;
   private effects!: EffectManager;
   private partsCollected: number = 0;
-  private player!: Player;
   private crates!: Phaser.Physics.Arcade.StaticGroup;
+  private player!: Player;
   private mapManager!: MapManager;
   private currentLevel: number = 0;
   private state: GameState = GameState.GROUND;
@@ -58,11 +58,9 @@ export class Game extends Phaser.Scene {
     this.setupEventListeners();
   }
   update() {
-    if (this.player) {
-      this.player.update();
-      this.handleRoofTransparency();
-      this.checkStairExit();
-    }
+    this.player.update();
+    this.handleRoofTransparency();
+    this.checkStairExit();
   }
   private setupEventListeners() {
     this.events.on("player_attack", (data: { x: number; y: number }) => {
@@ -137,39 +135,26 @@ export class Game extends Phaser.Scene {
   }
 
   private handleRoofTransparency() {
-    if (this.currentLevel === 1) {
+    if (this.state === GameState.ROOF) {
+      console.log("estoy arriba");
+
       this.mapManager.roofLayer.alpha = 1;
       return;
     }
+
     const tile = this.mapManager.roofLayer.getTileAtWorldXY(
       this.player.x,
       this.player.y
     );
 
-    if (tile) {
-      this.mapManager.roofLayer.alpha = Phaser.Math.Linear(
-        this.mapManager.roofLayer.alpha,
-        0.3,
-        0.1
-      );
-    } else {
-      this.mapManager.roofLayer.alpha = Phaser.Math.Linear(
-        this.mapManager.roofLayer.alpha,
-        1,
-        0.1
-      );
-    }
+    const targetAlpha = tile ? 0.3 : 1;
+    this.mapManager.roofLayer.alpha = Phaser.Math.Linear(
+      this.mapManager.roofLayer.alpha,
+      targetAlpha,
+      0.1
+    );
   }
 
-  private changeLevel(level: number) {
-    if (level === 1) {
-      this.mapManager.roofLayer.setDepth(5);
-      this.player.setDepth(10);
-    } else {
-      this.mapManager.roofLayer.setDepth(100);
-      this.player.setDepth(10);
-    }
-  }
   private setupLevelInteractions() {
     const stairObjects = this.mapManager.map.getObjectLayer("Objects")?.objects;
 
@@ -191,18 +176,18 @@ export class Game extends Phaser.Scene {
     });
   }
   private handleStairEntry(zone: Stairs) {
+    if (this.activeStair) return;
     this.activeStair = zone;
 
-    if (this.state === GameState.GROUND) {
-      if (this.player.body!.velocity.y < 0) {
-        this.state = GameState.CLIMBING_UP;
-        console.log("Estado: CLIMBING_UP");
-      }
-    } else if (this.state === GameState.ROOF) {
-      if (this.player.body!.velocity.y > 0) {
-        this.state = GameState.CLIMBING_DOWN;
-        console.log("Estado: CLIMBING_DOWN");
-      }
+    if (this.state === GameState.GROUND && this.player.body!.velocity.y < 0) {
+      this.state = GameState.CLIMBING_UP;
+      // console.log("Estado: CLIMBING_UP");
+    } else if (
+      this.state === GameState.ROOF &&
+      this.player.body!.velocity.y > 0
+    ) {
+      this.state = GameState.CLIMBING_DOWN;
+      // console.log("Estado: CLIMBING_DOWN");
     }
   }
   private checkStairExit() {
@@ -217,23 +202,33 @@ export class Game extends Phaser.Scene {
       if (this.state === GameState.CLIMBING_UP) {
         if (playerY < stairTop) {
           this.state = GameState.ROOF;
-          this.changeLevel(1);
+          this.executeLevelChange(1);
         } else {
           this.state = GameState.GROUND;
-          this.changeLevel(0);
+          this.executeLevelChange(0);
         }
       } else if (this.state === GameState.CLIMBING_DOWN) {
         if (playerY > stairBottom) {
           this.state = GameState.GROUND;
-          this.changeLevel(0);
+          this.executeLevelChange(0);
         } else {
           this.state = GameState.ROOF;
-          this.changeLevel(1);
+          this.executeLevelChange(1);
         }
       }
 
       console.log("Nuevo estado:", GameState[this.state]);
       this.activeStair = null;
+    }
+  }
+  private executeLevelChange(level: number) {
+    this.currentLevel = level;
+    if (level === 1) {
+      this.mapManager.roofLayer.setDepth(5);
+      this.player.setDepth(10);
+    } else {
+      this.mapManager.roofLayer.setDepth(100);
+      this.player.setDepth(10);
     }
   }
 }
