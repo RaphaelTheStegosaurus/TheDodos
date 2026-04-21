@@ -4,7 +4,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private smokeEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   public zHeight: number = 0;
-  private currentPhase: number = 0;
   public hp: number = 100;
   public maxHp: number = 100;
   public currentLevel: number = 0;
@@ -60,7 +59,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     });
   }
   public upgradeToChassis() {
-    this.currentPhase = 1;
     this.setScale(1.2);
     this.setTint(0x999999);
     console.log("¡Dodo ha evolucionado a Fase: CHASIS!");

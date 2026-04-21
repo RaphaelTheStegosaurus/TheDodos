@@ -8,10 +8,10 @@ import { MapManager } from "../../managers/MapManager";
 import { Stairs } from "../../entities/Stairs";
 
 enum GameState {
-  GROUND, // Caminando normal abajo
-  CLIMBING_UP, // En proceso de subir
-  ROOF, // Caminando normal arriba
-  CLIMBING_DOWN, // En proceso de bajar
+  GROUND,
+  CLIMBING_UP,
+  ROOF,
+  CLIMBING_DOWN,
 }
 
 export class Game extends Phaser.Scene {
@@ -21,7 +21,6 @@ export class Game extends Phaser.Scene {
   private crates!: Phaser.Physics.Arcade.StaticGroup;
   private player!: Player;
   private mapManager!: MapManager;
-  private currentLevel: number = 0;
   private state: GameState = GameState.GROUND;
   private activeStair: Stairs | null = null;
 
@@ -177,21 +176,21 @@ export class Game extends Phaser.Scene {
       });
     });
   }
+
   private handleStairEntry(zone: Stairs) {
     if (this.activeStair) return;
     this.activeStair = zone;
 
     if (this.state === GameState.GROUND && this.player.body!.velocity.y < 0) {
       this.state = GameState.CLIMBING_UP;
-      // console.log("Estado: CLIMBING_UP");
     } else if (
       this.state === GameState.ROOF &&
       this.player.body!.velocity.y > 0
     ) {
       this.state = GameState.CLIMBING_DOWN;
-      // console.log("Estado: CLIMBING_DOWN");
     }
   }
+
   private checkStairExit() {
     if (!this.activeStair) return;
     const isTouching = this.physics.overlap(this.player, this.activeStair);
@@ -219,12 +218,11 @@ export class Game extends Phaser.Scene {
         }
       }
 
-      console.log("Nuevo estado:", GameState[this.state]);
       this.activeStair = null;
     }
   }
+
   private executeLevelChange(level: number) {
-    this.currentLevel = level;
     if (level === 1) {
       this.mapManager.roofLayer.setDepth(5);
       this.player.setDepth(10);
