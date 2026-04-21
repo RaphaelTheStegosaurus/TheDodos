@@ -48,16 +48,6 @@ export class MapManager {
     //   29, 32, 39, 40, 45, 49, 50, 55, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
     //   70, 72, 73, 75, 76, 78, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92,
     // ];
-    const high = this.map.createLayer(
-      "HighWalls",
-      tileset,
-      0,
-      0
-    ) as Phaser.Tilemaps.TilemapLayer;
-    if (high) {
-      this.highLayer = high;
-      this.highLayer.setCollisionByProperty({ collides: true });
-    }
 
     this.roofLayer = this.map.createLayer(
       "Roofs",
