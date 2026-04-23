@@ -23,7 +23,6 @@ export class Game extends Phaser.Scene {
   private mapManager!: MapManager;
   private state: GameState = GameState.GROUND;
   private activeStair: Stairs | null = null;
-  private groundCollider!: Phaser.Physics.Arcade.Collider;
 
   constructor() {
     super("Game");
@@ -42,7 +41,7 @@ export class Game extends Phaser.Scene {
     this.mapManager = new MapManager(this);
 
     this.player = new Player(this, 400, 300);
-    this.groundCollider = this.physics.add.collider(
+    this.physics.add.collider(
       this.player,
       this.mapManager.groundLayer,
       undefined,
