@@ -264,7 +264,12 @@ export class Game extends Phaser.Scene {
     // CAMINAR ABAJO (Frente)
     this.anims.create({
       key: "dodo-walk-down",
-      frames: this.anims.generateFrameNumbers("dodo", { start: 0, end: 5 }), // Ajusta según la fila
+      frames: [
+        { key: "dodo", frame: 0 },
+        { key: "dodo", frame: 4 },
+        { key: "dodo", frame: 0 },
+        { key: "dodo", frame: 5 },
+      ],
       frameRate: 8,
       repeat: -1,
     });
@@ -272,7 +277,12 @@ export class Game extends Phaser.Scene {
     // CAMINAR ESPALDA (Arriba)
     this.anims.create({
       key: "dodo-walk-up",
-      frames: this.anims.generateFrameNumbers("dodo", { start: 18, end: 20 }),
+      frames: [
+        { key: "dodo", frame: 30 },
+        { key: "dodo", frame: 31 },
+        { key: "dodo", frame: 30 },
+        { key: "dodo", frame: 32 },
+      ],
       frameRate: 6,
       repeat: -1,
     });
@@ -293,7 +303,35 @@ export class Game extends Phaser.Scene {
     // Lateral (Derecha/Izquierda)
     this.anims.create({
       key: "dodo-walk-side",
-      frames: this.anims.generateFrameNumbers("dodo", { start: 6, end: 11 }),
+      frames: [
+        { key: "dodo", frame: 0 },
+        { key: "dodo", frame: 4 },
+        { key: "dodo", frame: 0 },
+        { key: "dodo", frame: 5 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    // Lateral (Izquierda)
+    this.anims.create({
+      key: "dodo-walk-left",
+      frames: [
+        { key: "dodo", frame: 10 },
+        { key: "dodo", frame: 14 },
+        { key: "dodo", frame: 10 },
+        { key: "dodo", frame: 15 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "dodo-walk-right",
+      frames: [
+        { key: "dodo", frame: 20 },
+        { key: "dodo", frame: 24 },
+        { key: "dodo", frame: 20 },
+        { key: "dodo", frame: 25 },
+      ],
       frameRate: 8,
       repeat: -1,
     });
