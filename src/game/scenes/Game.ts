@@ -35,6 +35,10 @@ export class Game extends Phaser.Scene {
     this.load.image("red-box", "EXPLOSIVECRATE.png");
     this.load.image("green-box", "REPAIRCRATE.png");
     this.load.image("player-sprite", "character.png");
+    this.load.spritesheet("dodo", "assets/DODO.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
   }
 
   create() {
@@ -255,5 +259,30 @@ export class Game extends Phaser.Scene {
       this.mapManager.roofLayer.setDepth(100);
       this.player.setDepth(10);
     }
+  }
+  private createDodoAnimations() {
+    // CAMINAR ABAJO (Frente)
+    this.anims.create({
+      key: "dodo-walk-down",
+      frames: this.anims.generateFrameNumbers("dodo", { start: 0, end: 5 }), // Ajusta según la fila
+      frameRate: 8,
+      repeat: -1,
+    });
+
+    // CAMINAR ESPALDA (Arriba)
+    this.anims.create({
+      key: "dodo-walk-up",
+      frames: this.anims.generateFrameNumbers("dodo", { start: 18, end: 20 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+
+    // GAME OVER (Explosión/Vuelo)
+    this.anims.create({
+      key: "dodo-die",
+      frames: this.anims.generateFrameNumbers("dodo", { start: 30, end: 32 }),
+      frameRate: 5,
+      repeat: 0,
+    });
   }
 }
