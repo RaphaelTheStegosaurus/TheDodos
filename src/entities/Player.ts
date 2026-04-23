@@ -52,7 +52,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       const angle = Math.atan2(velocity.y, velocity.x) * (180 / Math.PI);
       this.updateAnimationByAngle(angle);
     } else {
-      this.play("dodo-idle", true);
+      this.play("dodo-idle-s", true);
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
@@ -85,7 +85,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.smokeEmitter.setParticleTint(0x333333);
     }
     if (this.hp <= 0) {
-      this.die();
+      // this.die();
       (this.scene as any).onGameOver();
     }
   }

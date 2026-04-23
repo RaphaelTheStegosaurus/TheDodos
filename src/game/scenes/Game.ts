@@ -262,6 +262,39 @@ export class Game extends Phaser.Scene {
   }
   private createDodoAnimations() {
     this.anims.create({
+      key: "dodo-idle-s",
+      frames: [
+        { key: "dodo", frame: 0 },
+        { key: "dodo", frame: 1 },
+        { key: "dodo", frame: 2 },
+        { key: "dodo", frame: 4 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "dodo-idle-se",
+      frames: [
+        { key: "dodo", frame: 20 },
+        { key: "dodo", frame: 21 },
+        { key: "dodo", frame: 22 },
+        { key: "dodo", frame: 24 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "dodo-idle-so",
+      frames: [
+        { key: "dodo", frame: 10 },
+        { key: "dodo", frame: 11 },
+        { key: "dodo", frame: 12 },
+        { key: "dodo", frame: 14 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
       key: "dodo-walk-down",
       frames: [
         { key: "dodo", frame: 0 },
@@ -386,11 +419,11 @@ export class Game extends Phaser.Scene {
       targets: this.player,
       scale: 5,
       alpha: 0,
-      angle: 360, // Añade un giro para efecto de explosión
+      angle: 360,
       duration: 1200,
       ease: "Power2",
       onComplete: () => {
-        this.scene.restart(); // O mostrar menú de Game Over
+        this.scene.restart();
       },
     });
   }
