@@ -90,10 +90,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  private die() {
-    console.log("El jugador ha sido destruido");
-    //todo mostrar GameOver
-  }
   private updateAnimationByAngle(angle: number) {
     if (angle > -22.5 && angle <= 22.5) {
       this.play("dodo-walk-right", true);
