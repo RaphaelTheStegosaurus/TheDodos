@@ -12,6 +12,7 @@ enum GameState {
   CLIMBING_UP,
   ROOF,
   CLIMBING_DOWN,
+  DEAD,
 }
 
 export class Game extends Phaser.Scene {
@@ -34,8 +35,7 @@ export class Game extends Phaser.Scene {
     this.load.image("tiles", "scenario.png");
     this.load.image("red-box", "EXPLOSIVECRATE.png");
     this.load.image("green-box", "REPAIRCRATE.png");
-    this.load.image("player-sprite", "character.png");
-    this.load.spritesheet("dodo", "assets/DODO.png", {
+    this.load.spritesheet("dodo", "DODO.png", {
       frameWidth: 64,
       frameHeight: 64,
     });
@@ -43,7 +43,7 @@ export class Game extends Phaser.Scene {
 
   create() {
     this.mapManager = new MapManager(this);
-
+    this.createDodoAnimations();
     this.player = new Player(this, 400, 300);
     this.physics.add.collider(
       this.player,
@@ -277,12 +277,45 @@ export class Game extends Phaser.Scene {
       repeat: -1,
     });
 
-    // GAME OVER (Explosión/Vuelo)
     this.anims.create({
       key: "dodo-die",
       frames: this.anims.generateFrameNumbers("dodo", { start: 30, end: 32 }),
       frameRate: 5,
       repeat: 0,
+    });
+    this.anims.create({
+      key: "dodo-walk-ne",
+      frames: this.anims.generateFrameNumbers("dodo", { start: 21, end: 23 }),
+      frameRate: 8,
+      repeat: -1,
+    });
+
+    // Lateral (Derecha/Izquierda)
+    this.anims.create({
+      key: "dodo-walk-side",
+      frames: this.anims.generateFrameNumbers("dodo", { start: 6, end: 11 }),
+      frameRate: 8,
+      repeat: -1,
+    });
+  }
+  public onGameOver() {
+    if (this.state === GameState.DEAD) return;
+    this.state = GameState.DEAD;
+
+    this.physics.pause();
+    this.cameras.main.stopFollow();
+
+    this.player.play("dodo-die");
+    this.add.tween({
+      targets: this.player,
+      scale: 5,
+      alpha: 0,
+      angle: 360, // Añade un giro para efecto de explosión
+      duration: 1200,
+      ease: "Power2",
+      onComplete: () => {
+        this.scene.restart(); // O mostrar menú de Game Over
+      },
     });
   }
 }
