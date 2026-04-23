@@ -7,6 +7,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   public hp: number = 100;
   public maxHp: number = 100;
   public currentLevel: number = 0;
+  private piecesActive: number = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "dodo");
@@ -72,21 +73,49 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setTint(0x999999);
     console.log("¡Dodo ha evolucionado a Fase: CHASIS!");
   }
+  public setPieces(count: number) {
+    this.piecesActive = count;
+  }
 
   public takeDamage(amount: number) {
-    this.hp -= amount;
-    if (this.hp < 0) this.hp = 0;
-    this.setTint(0xff0000);
-    this.scene.time.delayedCall(100, () => this.clearTint());
-    this.scene.events.emit("player_hp_changed", this.hp);
-    this.scene.events.emit("player_hit");
-    if (this.hp < 30) {
-      this.smokeEmitter.setFrequency(100);
-      this.smokeEmitter.setParticleTint(0x333333);
+    // Si tiene piezas, cada hit le quita una pieza en lugar de HP directo (o reduce el impacto)
+    if (this.piecesActive > 0) {
+      this.piecesActive--;
+      console.log(`¡Pieza perdida! Piezas restantes: ${this.piecesActive}`);
+
+      // Notificamos a la escena que se ha perdido una pieza
+      this.scene.events.emit("piece_lost", this.piecesActive);
+
+      // Efecto visual de daño
+      this.setTint(0xffaa00);
+      this.scene.time.delayedCall(200, () => this.clearTint());
+
+      // Si pierde todas las piezas, vuelve a su estado base (escala normal)
+      if (this.piecesActive === 0) {
+        this.setScale(1);
+        this.clearTint();
+      }
+      return; // Detenemos aquí para que no reste HP si tenía armadura
     }
-    if (this.hp <= 0) {
-      // this.die();
-      (this.scene as any).onGameOver();
+
+    // Si NO tiene piezas, muere de 1 solo hit
+    this.hp = 0;
+    this.setTint(0xff0000);
+    this.scene.events.emit("player_hp_changed", 0);
+    this.scene.events.emit("player_hit");
+
+    // Ejecutar Game Over
+    (this.scene as any).onGameOver();
+  }
+  public upgradeWithPiece(totalPieces: number) {
+    this.piecesActive = totalPieces;
+    // Efecto de crecimiento según piezas
+    const newScale = 1 + this.piecesActive * 0.1;
+    this.setScale(newScale);
+
+    // Si llega a 5, aplicamos el tinte metálico del Chasis
+    if (this.piecesActive === 5) {
+      this.setTint(0x999999);
     }
   }
 
