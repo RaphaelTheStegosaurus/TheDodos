@@ -430,4 +430,43 @@ export class Game extends Phaser.Scene {
       },
     });
   }
+  private showGameOverMenu() {
+    // 1. Oscurecer el fondo con un rectángulo negro
+    const bg = this.add.rectangle(
+      0,
+      0,
+      this.scale.width,
+      this.scale.height,
+      0x000000,
+      0.8
+    );
+    bg.setOrigin(0).setDepth(3000).setScrollFactor(0);
+
+    // 2. Texto de Game Over
+    const title = this.add
+      .text(this.scale.width / 2, this.scale.height / 3, "GAME OVER", {
+        fontSize: "64px",
+        color: "#ff0000",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5)
+      .setDepth(3001)
+      .setScrollFactor(0);
+
+    // 3. Botón de Reintentar
+    const retryBtn = this.add
+      .text(this.scale.width / 2, this.scale.height / 2, "REINTENTAR", {
+        fontSize: "32px",
+        backgroundColor: "#333",
+        padding: { x: 20, y: 10 },
+      })
+      .setOrigin(0.5)
+      .setDepth(3001)
+      .setScrollFactor(0)
+      .setInteractive({ useHandCursor: true });
+
+    retryBtn.on("pointerdown", () => {
+      this.scene.restart();
+    });
+  }
 }
