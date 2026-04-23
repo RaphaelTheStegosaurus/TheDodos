@@ -34,12 +34,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   update() {
     const body = this.body as Phaser.Physics.Arcade.Body;
-    if (!body || body.enable === false) return; // Si está muerto o desactivado, no hace nada
+    if (!body || body.enable === false) return;
 
     const speed = 200;
     this.setVelocity(0);
 
-    // 1. Movimiento Físico
     if (this.cursors.left.isDown) this.setVelocityX(-speed);
     else if (this.cursors.right.isDown) this.setVelocityX(speed);
 
@@ -48,7 +47,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     body.velocity.normalize().scale(speed);
 
-    // 2. Máquina de Estados de Animación
     const velocity = body.velocity;
     if (velocity.length() > 0) {
       const angle = Math.atan2(velocity.y, velocity.x) * (180 / Math.PI);
@@ -88,7 +86,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     if (this.hp <= 0) {
       this.die();
-      (this.scene as any).onGameOver(); // Llamamos a la función en la escena
+      (this.scene as any).onGameOver();
     }
   }
 
@@ -97,36 +95,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     //todo mostrar GameOver
   }
   private updateAnimationByAngle(angle: number) {
-    // Simplificación de 8 direcciones
     if (angle > -22.5 && angle <= 22.5) {
-      // DERECHA
-      this.setFlipX(false);
-      this.play("dodo-walk-side", true);
+      this.play("dodo-walk-right", true);
     } else if (angle > 22.5 && angle <= 67.5) {
-      // SURESTE
-      this.setFlipX(false);
       this.play("dodo-walk-se", true);
     } else if (angle > 67.5 && angle <= 112.5) {
-      // ABAJO
       this.play("dodo-walk-down", true);
     } else if (angle > 112.5 && angle <= 157.5) {
-      // SUROESTE
-      this.setFlipX(true);
-      this.play("dodo-walk-se", true);
+      this.play("dodo-walk-so", true);
     } else if (angle > 157.5 || angle <= -157.5) {
-      // IZQUIERDA
-      this.setFlipX(true);
-      this.play("dodo-walk-side", true);
+      this.play("dodo-walk-left", true);
     } else if (angle > -157.5 && angle <= -112.5) {
-      // NOROESTE
-      this.setFlipX(true);
-      this.play("dodo-walk-ne", true);
+      this.play("dodo-walk-no", true);
     } else if (angle > -112.5 && angle <= -67.5) {
-      // ARRIBA
       this.play("dodo-walk-up", true);
     } else if (angle > -67.5 && angle <= -22.5) {
-      // NORESTE
-      this.setFlipX(false);
       this.play("dodo-walk-ne", true);
     }
   }
