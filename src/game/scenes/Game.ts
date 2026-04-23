@@ -250,24 +250,11 @@ export class Game extends Phaser.Scene {
 
   private executeLevelChange(level: number) {
     if (level === 1) {
-      // SUBIENDO AL TECHO
-      this.mapManager.roofLayer.setDepth(5); // El techo baja visualmente
-      this.player.setDepth(10); // El Dodo siempre arriba
-
-      if (this.groundCollider) {
-        // this.physics.add.collider(this.player, this.mapManager.groundLayer);
-        this.groundCollider.active = false; // ¡LIBERTAD! Ya no choca con los muros de abajo
-      }
-      console.log("Estado: ROOF - Muros desactivados");
-    } else {
-      // BAJANDO AL SUELO
-      this.mapManager.roofLayer.setDepth(100); // El techo sube y oculta al Dodo
+      this.mapManager.roofLayer.setDepth(5);
       this.player.setDepth(10);
-
-      if (this.groundCollider) {
-        this.groundCollider.active = true; // SEGURIDAD: Los muros vuelven a ser sólidos
-      }
-      console.log("Estado: GROUND - Muros reactivados");
+    } else {
+      this.mapManager.roofLayer.setDepth(100);
+      this.player.setDepth(10);
     }
   }
 }
