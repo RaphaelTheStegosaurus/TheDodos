@@ -413,17 +413,20 @@ export class Game extends Phaser.Scene {
 
     this.physics.pause();
     this.cameras.main.stopFollow();
-
+    this.player.setDepth(1000);
     this.player.play("dodo-die");
     this.add.tween({
       targets: this.player,
-      scale: 5,
-      alpha: 0,
-      angle: 360,
-      duration: 1200,
-      ease: "Power2",
+      scale: 20,
+      alpha: { from: 1, to: 0 },
+      angle: 720,
+      x: this.cameras.main.midPoint.x,
+      y: this.cameras.main.midPoint.y,
+      duration: 1600,
+      ease: "Power2.easeIn",
       onComplete: () => {
-        this.scene.restart();
+        this.effects.screenShake();
+        this.time.delayedCall(1000, () => this.scene.restart());
       },
     });
   }
