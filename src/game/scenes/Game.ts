@@ -222,6 +222,7 @@ export class Game extends Phaser.Scene {
     this.activeStair = zone;
     this.player.isLockedX = true;
     this.player.setX(zone.x);
+    this.player.setDepth(100);
     if (this.state === GameState.GROUND && this.player.body!.velocity.y < 0) {
       this.state = GameState.CLIMBING_UP;
     } else if (
@@ -440,6 +441,7 @@ export class Game extends Phaser.Scene {
     this.cameras.main.stopFollow();
     this.player.setDepth(1000);
     this.player.play("dodo-die");
+
     this.add.tween({
       targets: this.player,
       scale: 20,
@@ -453,7 +455,8 @@ export class Game extends Phaser.Scene {
         this.effects.screenShake();
         this.partsCollected = 0;
         this.state = GameState.GROUND;
-
+        this.player.setScale(1);
+        this.player.isLockedX = false;
         this.time.delayedCall(1000, () => this.scene.restart());
       },
     });
