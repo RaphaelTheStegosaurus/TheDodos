@@ -78,42 +78,28 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   public takeDamage(amount: number) {
-    // Si tiene piezas, cada hit le quita una pieza en lugar de HP directo (o reduce el impacto)
     if (this.piecesActive > 0) {
       this.piecesActive--;
-      console.log(`¡Pieza perdida! Piezas restantes: ${this.piecesActive}`);
-
-      // Notificamos a la escena que se ha perdido una pieza
       this.scene.events.emit("piece_lost", this.piecesActive);
-
-      // Efecto visual de daño
-      this.setTint(0xffaa00);
+      this.setTint(0xff0000);
       this.scene.time.delayedCall(200, () => this.clearTint());
-
-      // Si pierde todas las piezas, vuelve a su estado base (escala normal)
       if (this.piecesActive === 0) {
         this.setScale(1);
         this.clearTint();
       }
-      return; // Detenemos aquí para que no reste HP si tenía armadura
+      return;
     }
 
-    // Si NO tiene piezas, muere de 1 solo hit
     this.hp = 0;
-    this.setTint(0xff0000);
+    // this.setTint(0xff0000);
     this.scene.events.emit("player_hp_changed", 0);
     this.scene.events.emit("player_hit");
-
-    // Ejecutar Game Over
     (this.scene as any).onGameOver();
   }
   public upgradeWithPiece(totalPieces: number) {
     this.piecesActive = totalPieces;
-    // Efecto de crecimiento según piezas
     const newScale = 1 + this.piecesActive * 0.1;
     this.setScale(newScale);
-
-    // Si llega a 5, aplicamos el tinte metálico del Chasis
     if (this.piecesActive === 5) {
       this.setTint(0x999999);
     }
