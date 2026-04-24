@@ -220,7 +220,8 @@ export class Game extends Phaser.Scene {
   private handleStairEntry(zone: Stairs) {
     if (this.activeStair) return;
     this.activeStair = zone;
-
+    this.player.isLockedX = true;
+    this.player.setX(zone.x);
     if (this.state === GameState.GROUND && this.player.body!.velocity.y < 0) {
       this.state = GameState.CLIMBING_UP;
     } else if (
@@ -258,7 +259,7 @@ export class Game extends Phaser.Scene {
           this.executeLevelChange(1);
         }
       }
-
+      this.player.isLockedX = false;
       this.activeStair = null;
     }
   }

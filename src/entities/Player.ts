@@ -8,6 +8,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   public maxHp: number = 100;
   public currentLevel: number = 0;
   private piecesActive: number = 0;
+  public isLockedX: boolean = false;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "dodo");
@@ -39,8 +40,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const speed = 200;
     this.setVelocity(0);
 
-    if (this.cursors.left.isDown) this.setVelocityX(-speed);
-    else if (this.cursors.right.isDown) this.setVelocityX(speed);
+    if (!this.isLockedX) {
+      if (this.cursors.left.isDown) this.setVelocityX(-speed);
+      else if (this.cursors.right.isDown) this.setVelocityX(speed);
+    }
 
     if (this.cursors.up.isDown) this.setVelocityY(-speed);
     else if (this.cursors.down.isDown) this.setVelocityY(speed);
