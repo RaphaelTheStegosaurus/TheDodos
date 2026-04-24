@@ -284,7 +284,7 @@ export class Game extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: "dodo-idle-se",
+      key: "dodo-idle-e",
       frames: [
         { key: "dodo", frame: 20 },
         { key: "dodo", frame: 21 },
@@ -295,12 +295,23 @@ export class Game extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: "dodo-idle-so",
+      key: "dodo-idle-o",
       frames: [
         { key: "dodo", frame: 10 },
         { key: "dodo", frame: 11 },
         { key: "dodo", frame: 12 },
         { key: "dodo", frame: 14 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "dodo-idle-n",
+      frames: [
+        { key: "dodo", frame: 40 },
+        { key: "dodo", frame: 43 },
+        { key: "dodo", frame: 40 },
+        { key: "dodo", frame: 44 },
       ],
       frameRate: 8,
       repeat: -1,

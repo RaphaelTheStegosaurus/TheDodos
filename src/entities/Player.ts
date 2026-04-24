@@ -35,8 +35,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   update() {
     const body = this.body as Phaser.Physics.Arcade.Body;
-    if (!body || body.enable === false) return;
-
+    if (!body || body.enable === false || this.hp <= 0) return;
     const speed = 200;
     this.setVelocity(0);
 
