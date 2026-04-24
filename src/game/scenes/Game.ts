@@ -237,11 +237,12 @@ export class Game extends Phaser.Scene {
 
     if (!isTouching) {
       const playerY = this.player.y;
+      const margin = 5;
       const stairTop = this.activeStair.y - this.activeStair.height / 2;
       const stairBottom = this.activeStair.y + this.activeStair.height / 2;
 
       if (this.state === GameState.CLIMBING_UP) {
-        if (playerY < stairTop) {
+        if (playerY <= stairTop + margin) {
           this.state = GameState.ROOF;
           this.executeLevelChange(1);
         } else {
@@ -249,7 +250,7 @@ export class Game extends Phaser.Scene {
           this.executeLevelChange(0);
         }
       } else if (this.state === GameState.CLIMBING_DOWN) {
-        if (playerY > stairBottom) {
+        if (playerY >= stairBottom - margin) {
           this.state = GameState.GROUND;
           this.executeLevelChange(0);
         } else {
