@@ -348,7 +348,7 @@ export class Game extends Phaser.Scene {
         { key: "dodo", frame: 82 },
         { key: "dodo", frame: 81 },
       ],
-      frameRate: 5,
+      frameRate: 8,
       repeat: -1,
     });
     this.anims.create({
@@ -433,6 +433,7 @@ export class Game extends Phaser.Scene {
     if (this.state === GameState.DEAD) return;
     this.state = GameState.DEAD;
 
+    this.player.body!.enable = false;
     this.physics.pause();
     this.cameras.main.stopFollow();
     this.player.setDepth(1000);
@@ -448,6 +449,9 @@ export class Game extends Phaser.Scene {
       ease: "Power2.easeIn",
       onComplete: () => {
         this.effects.screenShake();
+        this.partsCollected = 0;
+        this.state = GameState.GROUND;
+
         this.time.delayedCall(1000, () => this.scene.restart());
       },
     });
