@@ -39,6 +39,10 @@ export class Game extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
+    this.load.spritesheet("meca", "Mecas.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
   }
 
   create() {
@@ -195,10 +199,8 @@ export class Game extends Phaser.Scene {
       0.1
     );
   }
-
   private setupLevelInteractions() {
     const stairObjects = this.mapManager.map.getObjectLayer("Objects")?.objects;
-
     stairObjects?.forEach((obj) => {
       const isStair = obj.type === "Stairs" || (obj as any).class === "Stairs";
       if (!isStair) return;
@@ -222,7 +224,7 @@ export class Game extends Phaser.Scene {
     this.activeStair = zone;
     this.player.isLockedX = true;
     this.player.setX(zone.x);
-    this.player.setDepth(100);
+    this.player.setDepth(6);
     if (this.state === GameState.GROUND && this.player.body!.velocity.y < 0) {
       this.state = GameState.CLIMBING_UP;
     } else if (
@@ -398,17 +400,17 @@ export class Game extends Phaser.Scene {
       frameRate: 8,
       repeat: -1,
     });
-    this.anims.create({
-      key: "dodo-walk-side",
-      frames: [
-        { key: "dodo", frame: 0 },
-        { key: "dodo", frame: 4 },
-        { key: "dodo", frame: 0 },
-        { key: "dodo", frame: 5 },
-      ],
-      frameRate: 8,
-      repeat: -1,
-    });
+    // this.anims.create({
+    //   key: "dodo-walk-side",
+    //   frames: [
+    //     { key: "dodo", frame: 0 },
+    //     { key: "dodo", frame: 4 },
+    //     { key: "dodo", frame: 0 },
+    //     { key: "dodo", frame: 5 },
+    //   ],
+    // frameRate: 8,
+    //   repeat: -1,
+    // });
     this.anims.create({
       key: "dodo-walk-left",
       frames: [
@@ -427,6 +429,454 @@ export class Game extends Phaser.Scene {
         { key: "dodo", frame: 24 },
         { key: "dodo", frame: 20 },
         { key: "dodo", frame: 25 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-idle-s",
+      frames: [
+        { key: "meca", frame: 0 },
+        { key: "meca", frame: 0 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-idle-e",
+      frames: [
+        { key: "meca", frame: 20 },
+        { key: "meca", frame: 20 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-idle-o",
+      frames: [
+        { key: "meca", frame: 10 },
+        { key: "meca", frame: 10 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-idle-n",
+      frames: [
+        { key: "meca", frame: 30 },
+        { key: "meca", frame: 30 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-down",
+      frames: [
+        { key: "meca", frame: 0 },
+        { key: "meca", frame: 1 },
+        { key: "meca", frame: 0 },
+        { key: "meca", frame: 2 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-left",
+      frames: [
+        { key: "meca", frame: 10 },
+        { key: "meca", frame: 11 },
+        { key: "meca", frame: 10 },
+        { key: "meca", frame: 12 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-right",
+      frames: [
+        { key: "meca", frame: 20 },
+        { key: "meca", frame: 21 },
+        { key: "meca", frame: 20 },
+        { key: "meca", frame: 22 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-up",
+      frames: [
+        { key: "meca", frame: 30 },
+        { key: "meca", frame: 31 },
+        { key: "meca", frame: 30 },
+        { key: "meca", frame: 32 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-no",
+      frames: [
+        { key: "meca", frame: 40 },
+        { key: "meca", frame: 41 },
+        { key: "meca", frame: 40 },
+        { key: "meca", frame: 42 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-ne",
+      frames: [
+        { key: "meca", frame: 50 },
+        { key: "meca", frame: 51 },
+        { key: "meca", frame: 50 },
+        { key: "meca", frame: 52 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-so",
+      frames: [
+        { key: "meca", frame: 60 },
+        { key: "meca", frame: 61 },
+        { key: "meca", frame: 60 },
+        { key: "meca", frame: 62 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca01-walk-se",
+      frames: [
+        { key: "meca", frame: 70 },
+        { key: "meca", frame: 71 },
+        { key: "meca", frame: 70 },
+        { key: "meca", frame: 72 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-idle-s",
+      frames: [
+        { key: "meca", frame: 3 },
+        { key: "meca", frame: 3 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-idle-e",
+      frames: [
+        { key: "meca", frame: 23 },
+        { key: "meca", frame: 23 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-idle-o",
+      frames: [
+        { key: "meca", frame: 13 },
+        { key: "meca", frame: 13 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-idle-n",
+      frames: [
+        { key: "meca", frame: 33 },
+        { key: "meca", frame: 33 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-down",
+      frames: [
+        { key: "meca", frame: 3 },
+        { key: "meca", frame: 4 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-left",
+      frames: [
+        { key: "meca", frame: 13 },
+        { key: "meca", frame: 14 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-right",
+      frames: [
+        { key: "meca", frame: 23 },
+        { key: "meca", frame: 24 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-up",
+      frames: [
+        { key: "meca", frame: 33 },
+        { key: "meca", frame: 34 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-no",
+      frames: [
+        { key: "meca", frame: 43 },
+        { key: "meca", frame: 44 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-ne",
+      frames: [
+        { key: "meca", frame: 53 },
+        { key: "meca", frame: 54 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-so",
+      frames: [
+        { key: "meca", frame: 63 },
+        { key: "meca", frame: 64 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca02-walk-se",
+      frames: [
+        { key: "meca", frame: 73 },
+        { key: "meca", frame: 74 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-idle-s",
+      frames: [
+        { key: "meca", frame: 5 },
+        { key: "meca", frame: 5 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-idle-e",
+      frames: [
+        { key: "meca", frame: 25 },
+        { key: "meca", frame: 25 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-idle-o",
+      frames: [
+        { key: "meca", frame: 15 },
+        { key: "meca", frame: 15 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-idle-n",
+      frames: [
+        { key: "meca", frame: 35 },
+        { key: "meca", frame: 35 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-down",
+      frames: [
+        { key: "meca", frame: 5 },
+        { key: "meca", frame: 6 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-left",
+      frames: [
+        { key: "meca", frame: 15 },
+        { key: "meca", frame: 16 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-right",
+      frames: [
+        { key: "meca", frame: 25 },
+        { key: "meca", frame: 26 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-up",
+      frames: [
+        { key: "meca", frame: 35 },
+        { key: "meca", frame: 36 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-no",
+      frames: [
+        { key: "meca", frame: 45 },
+        { key: "meca", frame: 46 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-ne",
+      frames: [
+        { key: "meca", frame: 55 },
+        { key: "meca", frame: 56 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-so",
+      frames: [
+        { key: "meca", frame: 65 },
+        { key: "meca", frame: 66 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca03-walk-se",
+      frames: [
+        { key: "meca", frame: 75 },
+        { key: "meca", frame: 76 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-idle-s",
+      frames: [
+        { key: "meca", frame: 7 },
+        { key: "meca", frame: 7 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-idle-e",
+      frames: [
+        { key: "meca", frame: 27 },
+        { key: "meca", frame: 27 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-idle-o",
+      frames: [
+        { key: "meca", frame: 17 },
+        { key: "meca", frame: 17 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-idle-n",
+      frames: [
+        { key: "meca", frame: 37 },
+        { key: "meca", frame: 37 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-down",
+      frames: [
+        { key: "meca", frame: 7 },
+        { key: "meca", frame: 8 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-left",
+      frames: [
+        { key: "meca", frame: 17 },
+        { key: "meca", frame: 18 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-right",
+      frames: [
+        { key: "meca", frame: 27 },
+        { key: "meca", frame: 28 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-up",
+      frames: [
+        { key: "meca", frame: 37 },
+        { key: "meca", frame: 38 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-no",
+      frames: [
+        { key: "meca", frame: 47 },
+        { key: "meca", frame: 48 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-ne",
+      frames: [
+        { key: "meca", frame: 57 },
+        { key: "meca", frame: 58 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-so",
+      frames: [
+        { key: "meca", frame: 67 },
+        { key: "meca", frame: 68 },
+      ],
+      frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "meca04-walk-se",
+      frames: [
+        { key: "meca", frame: 77 },
+        { key: "meca", frame: 78 },
       ],
       frameRate: 8,
       repeat: -1,

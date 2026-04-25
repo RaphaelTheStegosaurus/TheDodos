@@ -7,8 +7,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   public hp: number = 100;
   public maxHp: number = 100;
   public currentLevel: number = 0;
+  private currentWeapon: string = "none";
   private piecesActive: number = 0;
   public isLockedX: boolean = false;
+  isClimbing: boolean;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "dodo");
@@ -55,7 +57,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       const angle = Math.atan2(velocity.y, velocity.x) * (180 / Math.PI);
       this.updateAnimationByAngle(angle);
     } else {
-      this.play("dodo-idle-s", true);
+      this.play(`${this.getPrefix()}-idle-s"`, true);
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
@@ -73,7 +75,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   public upgradeToChassis() {
     this.setScale(1.2);
     this.setTint(0x999999);
-    console.log("¡Dodo ha evolucionado a Fase: CHASIS!");
   }
   public setPieces(count: number) {
     this.piecesActive = count;
@@ -106,24 +107,39 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setTint(0x999999);
     }
   }
-
+  private getPrefix = () => {
+    if (this.currentLevel > 3) {
+      return "meca04";
+    }
+    if (this.currentLevel > 2) {
+      return "meca03";
+    }
+    if (this.currentLevel > 1) {
+      return "meca02";
+    }
+    if (this.currentLevel > 0) {
+      return "meca01";
+    }
+    return "dodo";
+  };
   private updateAnimationByAngle(angle: number) {
+    const prefix = this.getPrefix();
     if (angle > -22.5 && angle <= 22.5) {
-      this.play("dodo-walk-right", true);
+      this.play(`${prefix}-walk-right`, true);
     } else if (angle > 22.5 && angle <= 67.5) {
-      this.play("dodo-walk-se", true);
+      this.play(`${prefix}-walk-se`, true);
     } else if (angle > 67.5 && angle <= 112.5) {
-      this.play("dodo-walk-down", true);
+      this.play(`${prefix}-walk-down`, true);
     } else if (angle > 112.5 && angle <= 157.5) {
-      this.play("dodo-walk-so", true);
+      this.play(`${prefix}-walk-so`, true);
     } else if (angle > 157.5 || angle <= -157.5) {
-      this.play("dodo-walk-left", true);
+      this.play(`${prefix}-walk-left`, true);
     } else if (angle > -157.5 && angle <= -112.5) {
-      this.play("dodo-walk-no", true);
+      this.play(`${prefix}-walk-no`, true);
     } else if (angle > -112.5 && angle <= -67.5) {
-      this.play("dodo-walk-up", true);
+      this.play(`${prefix}-walk-up`, true);
     } else if (angle > -67.5 && angle <= -22.5) {
-      this.play("dodo-walk-ne", true);
+      this.play(`${prefix}-walk-ne`, true);
     }
   }
 }
