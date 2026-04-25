@@ -101,16 +101,12 @@ export class Game extends Phaser.Scene {
     this.events.on("crate_broken", (data: any) =>
       this.spawnLoot(data.x, data.y, data.type)
     );
-    // Añadimos el listener para cuando el Dodo pierde una pieza por un golpe
-    //todo resetea los valores del dodo
-    this.events.on("piece_lost", (remainingPieces: number) => {
-      this.partsCollected = remainingPieces;
+    this.events.on("piece_lost", (newLevel: number) => {
+      this.partsCollected = newLevel;
       const progress = (this.partsCollected / 5) * 100;
       this.ui.updateProgress(progress);
       this.ui.updateParts(this.partsCollected);
       this.updateCameraZoom();
-
-      // Si quieres que la cámara tiemble más fuerte al perder armadura
       this.effects.screenShake();
     });
   }
@@ -156,13 +152,14 @@ export class Game extends Phaser.Scene {
   }
 
   private updateBuildProgress() {
-    if (this.partsCollected > 5) this.partsCollected = 5;
-
-    const progress = (this.partsCollected / 5) * 100;
+    if (this.player.currentLevel < 5) {
+      this.player.currentLevel++;
+      this.partsCollected = this.player.currentLevel;
+    }
+    const progress = (this.player.currentLevel / 5) * 100;
     this.ui.updateProgress(progress);
-    this.ui.updateParts(this.partsCollected);
+    this.ui.updateParts(this.player.currentLevel);
     this.updateCameraZoom();
-    this.player.upgradeWithPiece(this.partsCollected);
   }
 
   public checkAttack(hitArea: Phaser.GameObjects.Zone) {

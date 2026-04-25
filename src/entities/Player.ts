@@ -6,9 +6,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   public zHeight: number = 0;
   public hp: number = 100;
   public maxHp: number = 100;
-  public currentLevel: number = 0;
+  private _currentLevel: number = 0;
   private currentWeapon: string = "none";
-  private piecesActive: number = 0;
   public isLockedX: boolean = false;
   isClimbing: boolean;
 
@@ -71,55 +70,46 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       y: this.y,
     });
   }
-
-  public upgradeToChassis() {
-    this.setScale(1.2);
-    this.setTint(0x999999);
+  get currentLevel(): number {
+    return this._currentLevel;
   }
-  public setPieces(count: number) {
-    this.piecesActive = count;
+
+  set currentLevel(value: number) {
+    this._currentLevel = value;
+    const newScale = 1 + this._currentLevel * 0.1;
+    this.setScale(newScale);
+    // if (this._currentLevel > 0) {
+    //   this.setTexture("dodo-meca");
+    // }
+    console.log(`Evolución detectada: ${this.getPrefix()}`);
   }
 
   public takeDamage(amount: number) {
-    if (this.piecesActive > 0) {
-      this.piecesActive--;
-      this.scene.events.emit("piece_lost", this.piecesActive);
-      this.setTint(0xff0000);
+    if (this.currentLevel > 0) {
+      this.currentLevel--;
+      this.setTint(0xffaa00);
       this.scene.time.delayedCall(200, () => this.clearTint());
-      if (this.piecesActive === 0) {
-        this.setScale(1);
-        this.clearTint();
-      }
+      console.log(`¡Armadura dañada! Nivel actual: ${this.currentLevel}`);
+      this.scene.events.emit("piece_lost", this.currentLevel);
       return;
     }
-
-    this.hp = 0;
-    // this.setTint(0xff0000);
-    this.scene.events.emit("player_hp_changed", 0);
+    this.hp -= amount;
+    if (this.hp < 0) this.hp = 0;
+    this.setTint(0xff0000);
+    this.scene.time.delayedCall(100, () => this.clearTint());
+    this.scene.events.emit("player_hp_changed", this.hp);
     this.scene.events.emit("player_hit");
-    (this.scene as any).onGameOver();
-  }
-  public upgradeWithPiece(totalPieces: number) {
-    this.piecesActive = totalPieces;
-    const newScale = 1 + this.piecesActive * 0.1;
-    this.setScale(newScale);
-    if (this.piecesActive === 5) {
-      this.setTint(0x999999);
+
+    if (this.hp == 0) {
+      (this.scene as any).onGameOver();
     }
   }
+
   private getPrefix = () => {
-    if (this.currentLevel > 3) {
-      return "meca04";
-    }
-    if (this.currentLevel > 2) {
-      return "meca03";
-    }
-    if (this.currentLevel > 1) {
-      return "meca02";
-    }
-    if (this.currentLevel > 0) {
-      return "meca01";
-    }
+    if (this._currentLevel >= 4) return "meca04";
+    if (this._currentLevel >= 3) return "meca03";
+    if (this._currentLevel >= 2) return "meca02";
+    if (this._currentLevel >= 1) return "meca01";
     return "dodo";
   };
   private updateAnimationByAngle(angle: number) {
