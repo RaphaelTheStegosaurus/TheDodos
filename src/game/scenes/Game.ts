@@ -46,8 +46,9 @@ export class Game extends Phaser.Scene {
   }
 
   create() {
-    this.mapManager = new MapManager(this);
     this.createDodoAnimations();
+    this.createMecaAnimations();
+    this.mapManager = new MapManager(this);
     this.player = new Player(this, 400, 300);
     this.physics.add.collider(
       this.player,
@@ -82,6 +83,9 @@ export class Game extends Phaser.Scene {
     this.ui = new UIManager(this);
     this.effects = new EffectManager(this);
     this.setupEventListeners();
+  }
+  createMecaAnimations() {
+    console.log("AQUI PASAR ANIMACIONES DE LOS MECAS ");
   }
   update() {
     this.player.update();
@@ -276,15 +280,12 @@ export class Game extends Phaser.Scene {
   private createDodoAnimations() {
     this.anims.create({
       key: "dodo-idle-s",
-      frames: [
-        { key: "dodo", frame: 0 },
-        { key: "dodo", frame: 1 },
-        { key: "dodo", frame: 2 },
-        { key: "dodo", frame: 4 },
-      ],
-      frameRate: 8,
+      frames: this.anims.generateFrameNumbers("dodo", { start: 0, end: 3 }),
+      frameRate: 4,
       repeat: -1,
+      yoyo: true,
     });
+
     this.anims.create({
       key: "dodo-idle-e",
       frames: [

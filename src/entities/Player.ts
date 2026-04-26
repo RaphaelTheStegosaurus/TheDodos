@@ -12,6 +12,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "dodo");
+    if (!this.anims.exists(`${this.getPrefix()}-idle-s"`)) {
+      this.anims.create({
+        key: `${this.getPrefix()}-idle-s"`,
+        frames: this.anims.generateFrameNumbers("dodo", { start: 0, end: 3 }),
+        frameRate: 4,
+        repeat: -1,
+        yoyo: true,
+      });
+    }
     scene.add.existing(this);
     scene.physics.add.existing(this);
     const body = this.body as Phaser.Physics.Arcade.Body;
@@ -77,9 +86,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this._currentLevel = value;
     const newScale = 1 + this._currentLevel * 0.1;
     this.setScale(newScale);
-    // if (this._currentLevel > 0) {
-    //   this.setTexture("dodo-meca");
-    // }
     console.log(`Evolución detectada: ${this.getPrefix()}`);
   }
 
@@ -88,7 +94,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.currentLevel--;
       this.setTint(0xffaa00);
       this.scene.time.delayedCall(200, () => this.clearTint());
-      console.log(`¡Armadura dañada! Nivel actual: ${this.currentLevel}`);
       this.scene.events.emit("piece_lost", this.currentLevel);
       return;
     }
