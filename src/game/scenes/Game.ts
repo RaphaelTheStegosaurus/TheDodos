@@ -397,17 +397,6 @@ export class Game extends Phaser.Scene {
       frameRate: 8,
       repeat: -1,
     });
-    // this.anims.create({
-    //   key: "dodo-walk-side",
-    //   frames: [
-    //     { key: "dodo", frame: 0 },
-    //     { key: "dodo", frame: 4 },
-    //     { key: "dodo", frame: 0 },
-    //     { key: "dodo", frame: 5 },
-    //   ],
-    // frameRate: 8,
-    //   repeat: -1,
-    // });
     this.anims.create({
       key: "dodo-walk-left",
       frames: [

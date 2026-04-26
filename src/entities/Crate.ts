@@ -3,17 +3,10 @@ import * as Phaser from "phaser";
 export class Crate extends Phaser.Physics.Arcade.Sprite {
   public health: number = 3;
   protected lootType: string = "generic";
-  constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    texture: string,
-    frame: number
-  ) {
-    super(scene, x, y, texture, frame);
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
+    super(scene, x, y, texture);
     scene.add.existing(this);
     scene.physics.add.existing(this, true);
-    this.setFrame(1);
     this.body?.setSize(32, 32);
   }
   public takeDamage(amount: number) {
