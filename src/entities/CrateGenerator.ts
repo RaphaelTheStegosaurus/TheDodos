@@ -31,7 +31,7 @@ export class CrateGenerator {
       return;
     }
     const rand = Phaser.Math.FloatBetween(0, 1);
-    if (rand < 0.25) {
+    if (rand < 0.4) {
       this.group.add(new ExplosiveCrate(this.scene, x, y));
     } else {
       this.group.add(new RepairCrate(this.scene, x, y));

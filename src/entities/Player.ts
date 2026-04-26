@@ -86,7 +86,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this._currentLevel = value;
     const newScale = 1 + this._currentLevel * 0.1;
     this.setScale(newScale);
-    console.log(`Evolución detectada: ${this.getPrefix()}`);
   }
 
   public takeDamage(amount: number) {

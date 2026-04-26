@@ -6,6 +6,7 @@ import { UIManager } from "../../managers/UIManager";
 import { EffectManager } from "../../effects/EffectManager";
 import { MapManager } from "../../managers/MapManager";
 import { Stairs } from "../../entities/Stairs";
+import { ExplosiveCrate } from "../../entities/ExplosiveCrate";
 
 enum GameState {
   GROUND,
@@ -84,13 +85,32 @@ export class Game extends Phaser.Scene {
     this.effects = new EffectManager(this);
     this.setupEventListeners();
   }
-  createMecaAnimations() {
+  private createMecaAnimations() {
     console.log("AQUI PASAR ANIMACIONES DE LOS MECAS ");
   }
   update() {
     this.player.update();
     this.handleRoofTransparency();
     this.checkStairExit();
+    const proximidadMeca = 100;
+    const proximidadDodo = 50;
+
+    this.crates.getChildren().forEach((crate: any) => {
+      if (crate instanceof ExplosiveCrate) {
+        const dist = Phaser.Math.Distance.Between(
+          this.player.x,
+          this.player.y,
+          crate.x,
+          crate.y
+        );
+
+        if (this.player.currentLevel > 0 && dist < proximidadMeca) {
+          this.detonateBomb(crate);
+        } else if (this.player.currentLevel === 0 && dist < proximidadDodo) {
+          this.activateTimerBomb(crate);
+        }
+      }
+    });
   }
   private setupEventListeners() {
     this.events.on("player_attack", (data: { x: number; y: number }) => {
@@ -132,6 +152,7 @@ export class Game extends Phaser.Scene {
 
     this.physics.overlap(hitArea, this.crates, (_zone, crate) => {
       (crate as Crate).takeDamage(1);
+      crate.destroy();
     });
     // this.physics.overlap(hitArea, this.enemies, (_zone, enemy) => {
     //   (enemy as Player).takeDamage(10);
@@ -144,26 +165,63 @@ export class Game extends Phaser.Scene {
     const count = type === "REPAIR_KIT" ? 15 : 40;
     const boxSprite = type === "REPAIR_KIT" ? "green-box" : "red-box";
     this.effects.createExplosion(x, y, color, count);
-    const item = this.physics.add.sprite(x, y, boxSprite, 10);
+    const item = this.physics.add.sprite(x, y, boxSprite);
 
     this.physics.add.overlap(this.player, item, () => {
       if (type === "REPAIR_KIT") {
         this.partsCollected += 1;
         this.updateBuildProgress();
+        item.destroy();
+      } else {
+        if (this.player.currentLevel < 1) {
+          this.activateTimerBomb(item);
+        } else {
+          this.detonateBomb(item);
+        }
       }
-      item.destroy();
     });
   }
 
+  private activateTimerBomb(item: Phaser.Physics.Arcade.Sprite) {
+    if (item.data && item.data.get("primed")) return;
+    item.setData("primed", true);
+    item.setTint(0xffff00);
+    this.tweens.add({
+      targets: item,
+      alpha: 0.2,
+      duration: 100,
+      yoyo: true,
+      repeat: -1,
+    });
+
+    this.time.delayedCall(5000, () => {
+      if (item.active) this.detonateBomb(item);
+    });
+  }
+
+  private detonateBomb(item: Phaser.Physics.Arcade.Sprite) {
+    if (!item.active) return;
+    const dist = Phaser.Math.Distance.Between(
+      this.player.x,
+      this.player.y,
+      item.x,
+      item.y
+    );
+    if (dist < 100) {
+      this.player.takeDamage(40);
+    }
+    this.cameras.main.shake(200, 0.02);
+    item.destroy();
+  }
   private updateBuildProgress() {
     if (this.player.currentLevel < 5) {
       this.player.currentLevel++;
       this.partsCollected = this.player.currentLevel;
     }
     const progress = (this.player.currentLevel / 5) * 100;
+    this.updateCameraZoom();
     this.ui.updateProgress(progress);
     this.ui.updateParts(this.player.currentLevel);
-    this.updateCameraZoom();
   }
 
   public checkAttack(hitArea: Phaser.GameObjects.Zone) {
