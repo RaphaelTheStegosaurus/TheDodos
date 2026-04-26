@@ -4,8 +4,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private smokeEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   public zHeight: number = 0;
-  public hp: number = 100;
-  public maxHp: number = 100;
+  public hp: number = 20;
   private _currentLevel: number = 0;
   private currentWeapon: string = "none";
   public isLockedX: boolean = false;
